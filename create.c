@@ -1,7 +1,9 @@
 // Filename:
 //		ccnx_create.c
 // Program:
-// 		Create a directory and a slice
+// 		Create a directory and a slice. Also generate a "binding.txt" which
+//		contains the information of slice name, directory name and grou key.
+//		Basically it uses the "create.sh".
 // History:
 //		20120601	Kuan-Hao		First release
 
