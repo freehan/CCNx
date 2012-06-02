@@ -19,6 +19,9 @@
 //		file01.txt	yifei		001
 //		file02.txt	minhan		002
 // ------------------------------------------------------------
+#include "stdio.h"
+#include "stdlib.h"
+#include "string.h"
 
 
 void update_local_log() {
@@ -66,8 +69,18 @@ void put_file() {
 void get_file() {
 	// get_file;
 }
+void usage()
+{
+	printf("cmd directory\n");
+}
 
 int main(int argc, char const *argv[]) {
+	if(argc != 2)
+		usage();
+
+	char *dir = malloc((strlen(argv[1])+1)*sizeof(char));
+	strcpy(dir, argv[1]);
+
 	// while (1) {
 		update_local_log();
 		download_repo_log();
