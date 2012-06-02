@@ -35,7 +35,10 @@ void download_repo_log() {
 }
 
 void check_repo_log() {
-
+	FILE * fp_repo;
+	FILE * fp_local;
+	fp=open("./.local");
+	fp=fopen("./.repolog.txt","r");
 	/*
 	if (local_new) {
 		// Local Seq # > Repo Seq #
