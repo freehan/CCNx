@@ -11,8 +11,61 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <unistd.h>
+#include <time.h>
 
-#include "check_local_log.c"
+char timestamp[15];
+
+void show_modified_time(char *filename) {
+	struct stat b;
+	if (!stat(filename, &b)) {
+		strftime(timestamp, 100, "%Y%m%d%H%M%S", localtime(&b.st_mtime));
+	} else {
+		printf("Cannot display the time.\n");
+
+		exit(1);
+	}
+
+	return;
+}
+
+void generate_log_file(const char *path) {
+	int file_count = 0;
+	struct dirent* dent;
+	struct stat st;
+	DIR* srcdir = opendir(path);
+	FILE* fp;
+
+	// Generate the local log file
+	fp = fopen(".locallog", "w");
+
+	while((dent = readdir(srcdir)) != NULL) { 
+		// Not the files we need
+		if(strcmp(dent->d_name, ".") == 0 || strcmp(dent->d_name, "..") == 0) {
+			continue;
+		}
+
+		lstat(dent->d_name, &st);
+
+		// Check if it is a regular file
+		if (S_ISREG(st.st_mode)) {
+			show_modified_time(dent->d_name);
+			// Save the filename, timestamp and seq # into the log file
+			fprintf(fp, "%s\t%s\t001\n", dent->d_name, timestamp);  
+		}
+	}
+
+	closedir(srcdir);
+
+	// Close the log file
+	fclose(fp);
+
+	return ;
+}
 
 // Show the usage
 void usage() {
