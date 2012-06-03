@@ -283,9 +283,11 @@ int main(int argc, char const *argv[]) {
 
 	// while (1) {
 		update_local_log(dir_name);
-
+		printf("successful after update local log\n");
 		download_repo_log(dir_name, slice_name);
+		printf("successful after download repo log\n");
 		check_repo_log(dir_name, slice_name);
+		printf("successful after check repo log\n");
 	// }
 
 	printf("success!!!!!!!!!!\n");
