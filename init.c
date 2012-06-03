@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
 	int opt;
 	char shell[100];
 	char slice_name[20];
-	char dir_name[20];
+	char dir_name[50];
 	char key[20];
 	FILE *fp;
 
