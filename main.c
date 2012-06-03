@@ -148,7 +148,7 @@ void check_repo_log(char *dir, char * slice)
 	char local_log[50];
 
 
-	strcpy(dir,"~/Documents/sync_folder"); //test
+	//strcpy(dir,"~/Documents/sync_folder"); //test
 
 	strcpy(repo_log,dir);
 	strcpy(local_log,dir);
