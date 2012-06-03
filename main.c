@@ -45,6 +45,7 @@ void update_local_log(const char *path) {
 	FILE* fp;
 	FILE* output;
 	char filename[20];
+	char user[20];
 	char timeTmp[15];
 	char seq[4];
 	char filepath_01[50];
@@ -93,7 +94,7 @@ void update_local_log(const char *path) {
 		// if (S_ISREG(st.st_mode)) {
 			show_modified_time(path, dent->d_name);
 			rewind(fp);
-			while ((fscanf(fp, "%s %s %s", filename, timeTmp, seq)) != EOF) {
+			while ((fscanf(fp, "%s %s %s %s", filename, user, timeTmp, seq)) != EOF) {
 				if (strcmp(filename, dent->d_name) != 0) {
 					continue;
 				}

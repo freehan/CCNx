@@ -1,8 +1,8 @@
-Create a slice:
+Create a slice and a local folder:
 	$ ./init -d dir_name -s slice_name -k key
 
-Check a slice:
-	$ ./check dir_name
+Check a slice and do synchronization:
+	$ ./main dir_name
 
 ------------------------------------------------------------
 binding.txt:
