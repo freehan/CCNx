@@ -1,5 +1,5 @@
 Create a slice:
-	$ ./create -k dir_name -s slice_name
+	$ ./create -d dir_name -s slice_name -k key
 
 Check a slice:
 	$ ./check dir_name

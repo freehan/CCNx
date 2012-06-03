@@ -33,18 +33,8 @@ void update_local_log() {
 	*/
 }
 
-void download_repo_log(char * dir_name, char * slice_name, char *key) {
-	char shell[100];
-	strcpy(shell,"sh get_file.sh");
-	strcat(shell," ");
-	strcat(shell,slice_name);
-	strcat(shell," ");
-	strcat(shell,".repolog");
-	strcat(shell," ");
-	strcat(shell,dir_name);
-	printf("%s\n",shell);
-	system(shell);
-
+void download_repo_log(char * dir_name, char * slice_name) {
+	get_file(dir_name, ".repolog", slice_name);
 }
 
 void check_repo_log() {
@@ -70,13 +60,34 @@ void check_repo_log() {
 
 }
 
-void put_file() {
+void put_file(char * dir_name, char * file_name, char * slice_name) {
 	// put_log;
 	// put_file;
+	char shell[100];
+	strcpy(shell,"sh put_file.sh");
+	strcat(shell," ");
+	strcat(shell,slice_name);
+	strcat(shell," ");
+	strcat(shell,file_name);
+	strcat(shell," ");
+	strcat(shell,dir_name);
+	printf("%s\n",shell);
+	system(shell);
+
 }
 
-void get_file() {
+void get_file(char * dir_name, char * file_name, char * slice_name) {
 	// get_file;
+	char shell[100];
+	strcpy(shell,"sh get_file.sh");
+	strcat(shell," ");
+	strcat(shell,slice_name);
+	strcat(shell," ");
+	strcat(shell,file_name);
+	strcat(shell," ");
+	strcat(shell,dir_name);
+	printf("%s\n",shell);
+	system(shell);
 }
 void usage()
 {
@@ -117,7 +128,7 @@ int main(int argc, char const *argv[]) {
 
 	// while (1) {
 		update_local_log();
-		download_repo_log(dir_name, slice_name, group_key);
+		download_repo_log(dir_name, slice_name);
 		check_repo_log();
 	// }
 	
