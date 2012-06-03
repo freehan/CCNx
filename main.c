@@ -33,8 +33,17 @@ void update_local_log() {
 	*/
 }
 
-void download_repo_log() {
-	
+void download_repo_log(char * dir_name, char * slice_name, char *key) {
+	char shell[100];
+	strcpy(shell,"sh get_file.sh");
+	strcat(shell," ");
+	strcat(shell,slice_name);
+	strcat(shell," ");
+	strcat(shell,".repolog");
+	strcat(shell," ");
+	strcat(shell,dir_name);
+	printf("%s\n",shell);
+	system(shell);
 
 }
 
@@ -104,9 +113,11 @@ int main(int argc, char const *argv[]) {
 	}
 	fclose(fp);
 
+
+
 	// while (1) {
 		update_local_log();
-		download_repo_log();
+		download_repo_log(dir_name, slice_name, group_key);
 		check_repo_log();
 	// }
 	

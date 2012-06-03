@@ -4,4 +4,4 @@
 # $2: Slice name
 
 mkdir $1
-ccnsyncslice create /$2 /$2/
+ccnsyncslice create $2 $2/
