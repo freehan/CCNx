@@ -52,7 +52,6 @@ void update_local_log(const char *path) {
 	char cmdTmp[100];
 	int found = 0;
 
-	printf("%s\n", path);
 	strcpy(filepath_01, path);
 	strcat(filepath_01, "/.locallog");
 
@@ -98,6 +97,7 @@ void update_local_log(const char *path) {
 					fprintf(output, "%s\t%s\t%s\n", filename, timeTmp, seq);
 				} else {
 					// The file has been modified
+					printf("\"%s\" has been modified\n", filename);
 					fprintf(output, "%s\t%s\t%03d\n", filename, timestamp, atoi(seq) + 1);
 				}
 
@@ -279,8 +279,8 @@ int main(int argc, char const *argv[]) {
 	// while (1) {
 		update_local_log(dir_name);
 
-		download_repo_log(dir_name, slice_name);
-		check_repo_log(dir_name, slice_name);
+		// download_repo_log(dir_name, slice_name);
+		// check_repo_log(dir_name, slice_name);
 	// }
 	
 	return 0;
