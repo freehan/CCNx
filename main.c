@@ -34,11 +34,19 @@ void download_repo_log() {
 
 }
 
-void check_repo_log() {
+void check_repo_log(char * dir) {
 	FILE * fp_repo;
 	FILE * fp_local;
-	fp=open("./.local");
-	fp=fopen("./.repolog.txt","r");
+	char file_name[20];
+	char user_name[20];
+	char seq_no[20];
+
+	fp_repo=fopen("","r");
+	fp_local=fopen("","r");
+	while (scanf(fp_repo, "%s %s %s", file_name, user_name, seq_no) != EOF)
+	{
+
+	}
 	/*
 	if (local_new) {
 		// Local Seq # > Repo Seq #
