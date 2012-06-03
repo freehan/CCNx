@@ -160,7 +160,7 @@ void check_repo_log(char *dir, char * slice)
 	char local_log[50];
 
 
-	strcpy(dir,"~/Documents/sync_folder"); //test
+	//strcpy(dir,"~/Documents/sync_folder"); //test
 
 	strcpy(repo_log,dir);
 	strcpy(local_log,dir);
@@ -196,7 +196,7 @@ void check_repo_log(char *dir, char * slice)
 		{
 			get_file(dir, repo_file_name, slice);
 		}
-//		else
+//		else  // local_seq_no == repo_seq_no ---> conflict resolving
 //		{
 //
 //		}
@@ -265,13 +265,17 @@ int main(int argc, char const *argv[]) {
 
 	char shell[100];
 	char slice_name[20];
-	char dir_name[20];
+	char dir_name[50];
 	char group_key[20];
 	FILE *fp;
 	int found = 0;
 
 	fp = fopen("binding.txt", "r");
-
+	if(fp == NULL)
+	{
+		printf("cannot find binding.txt\n");
+		exit(1);
+	}
 	while (fscanf(fp, "%s %s %s", dir_name, slice_name, group_key) != EOF) {
 		if (strcmp(argv[1], dir_name) == 0) {
 			printf("dir_name = %s\n", dir_name);
@@ -290,10 +294,14 @@ int main(int argc, char const *argv[]) {
 
 	// while (1) {
 		update_local_log(dir_name);
-
+		printf("successful after update local log\n");
 		download_repo_log(dir_name, slice_name);
+		printf("successful after download repo log\n");
 		check_repo_log(dir_name, slice_name);
+		printf("successful after check repo log\n");
 	// }
+
+	printf("success!!!!!!!!!!\n");
 	
 	return 0;
 }
