@@ -100,6 +100,7 @@ void update_local_log(const char *path) {
 					// The file has been modified
 					printf("\"%s\" has been modified\n", filename);
 					fprintf(output, "%s\t%s\t%03d\n", filename, timestamp, atoi(seq) + 1);
+					fprintf(stdout, "%s\t%s\t%03d\n", filename, timestamp, atoi(seq) + 1);
 				}
 
 				break;
@@ -108,6 +109,7 @@ void update_local_log(const char *path) {
 			if (found == 0) {
 				printf("Add a new file: %s \n", dent->d_name);
 				fprintf(output, "%s\t%s\t001\n", dent->d_name, timestamp);
+				fprintf(stdout, "%s\t%s\t001\n", dent->d_name, timestamp);
 			}
 		// }
 	}
@@ -117,7 +119,7 @@ void update_local_log(const char *path) {
 	// Close the log file
 	fclose(fp);
 	fclose(output);
-
+	
 	strcpy(cmdTmp, "rm ");
 	strcat(cmdTmp, filepath_01);
 	system(cmdTmp);
@@ -126,7 +128,6 @@ void update_local_log(const char *path) {
 	strcat(cmdTmp, " ");
 	strcat(cmdTmp, filepath_01);
 	system(cmdTmp);
-
 	return;
 }
 
@@ -139,12 +140,17 @@ void check_repo_log(char *dir, char * slice)
 {
 	FILE * fp_repo;
 	FILE * fp_local;
+
 	char repo_file_name[50];
 	char repo_user_name[50];
 	char repo_seq_no[50];
+	int repo_file_count;
+
 	char local_file_name[50];
 	char local_user_name[50];
 	char local_seq_no[50];
+	int local_file_count;
+
 	char repo_log[50];
 	char local_log[50];
 
@@ -160,8 +166,10 @@ void check_repo_log(char *dir, char * slice)
 
 	fp_repo=fopen(repo_log,"r");
 	fp_local=fopen(local_log,"r");
+
 	while (fscanf(fp_repo, "%s %s %s", repo_file_name, repo_user_name, repo_seq_no) != EOF)
 	{
+		printf("%s\n%s\n%s\n",repo_file_name, repo_user_name, repo_seq_no);
 		//is_found=0 if a file in repo cannot be found in local
 		//        =1 otherwise
 		int is_found=0;
