@@ -38,19 +38,59 @@ void download_repo_log() {
 
 }
 
-void check_repo_log(char * dir) {
+//@param dir: the path of the folder to be synchronized
+void check_repo_log(char dir []) {
 	FILE * fp_repo;
 	FILE * fp_local;
-	char file_name[20];
-	char user_name[20];
-	char seq_no[20];
+	char repo_file_name[50];
+	char repo_user_name[50];
+	char repo_seq_no[50];
+	char local_file_name[50];
+	char local_user_name[50];
+	char local_seq_no[50];
+	char repo_log[50];
+	char local_log[50];
 
-	fp_repo=fopen("","r");
-	fp_local=fopen("","r");
-	while (scanf(fp_repo, "%s %s %s", file_name, user_name, seq_no) != EOF)
+	strcpy(repo_log,dir);
+	strcpy(local_log,dir);
+
+	strcat(repo_log,"/.repolog");
+	strcat(local_log,"/.locallog");
+
+
+	fp_repo=fopen(repo_log,"r");
+	fp_local=fopen(local_log,"r");
+	while (fscanf(fp_repo, "%s %s %s", repo_file_name, repo_user_name, repo_seq_no) != EOF)
 	{
+		//is_found=0 if a file in repo cannot be found in local
+		//        =1 otherwise
+		int is_found=0;
+		while (fscanf(fp_local, "%s %s %s", local_file_name, local_user_name, local_seq_no) != EOF)
+		{
+			if (strcmp(local_file_name, repo_file_name)==0)
+			{
+				is_found=1;
+				break;
+			}
+		}
+		if (is_found==0)
+		{
+			get_file();
+		}
+		else if (local_seq_no > repo_seq_no)
+		{
+			put_file();
+		}
+		else if (local_seq_no < repo_seq_no)
+		{
+			get_file();
+		}
+		else
+		{
 
+		}
 	}
+}
 	/*
 	if (local_new) {
 		// Local Seq # > Repo Seq #
@@ -118,7 +158,7 @@ int main(int argc, char const *argv[]) {
 	// while (1) {
 		update_local_log();
 		download_repo_log();
-		check_repo_log();
+		check_repo_log(dir_name);
 	// }
 	
 	return 0;
