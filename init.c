@@ -43,7 +43,7 @@ void generate_log_file(const char *path) {
 
 	// Generate the local log file
 	strcpy(filepath, path);
-	strcat(filepath, /.locallog);
+	strcat(filepath, "/.locallog");
 	fp = fopen(filepath, "w");
 
 	while((dent = readdir(srcdir)) != NULL) { 
