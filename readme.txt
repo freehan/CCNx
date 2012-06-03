@@ -15,11 +15,13 @@ binding.txt:
 Log Filename Format
 
 .locallog
-	Filename	Username	Time	Seq#
-	file01.txt	yifei		10001	001
-	file02.txt	minhan		10020	002
+	Filename	Username	Time	Seq#	Del
+	file01.txt	yifei		10001	001		0
+	file02.txt	minhan		10020	002		0
+	file03.txt	minhan		10030	002		1 		<- The file is deleted
 
 .repolog
-	Filename	Username	Seq#
-	file01.txt	yifei		001
-	file02.txt	minhan		002
+	Filename	Username	Seq# 	Del
+	file01.txt	yifei		001		0
+	file02.txt	minhan		002		0	
+	file03.txt	minhan		002		1 		<- The file is deleted
