@@ -9,14 +9,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "check_local_log.h"
 
-void update_local_log() {
-	/*
-	if (modified) {
-		// Update time_stamp
-		// Seq # + 1
-	}
-	*/
+
+void update_local_log(dir_name) {
+	compare_log_file(dir_name);
+
+	return;
 }
 
 void download_repo_log(char * dir_name, char * slice_name) {
@@ -165,7 +164,7 @@ int main(int argc, char const *argv[]) {
 
 
 	// while (1) {
-		update_local_log();
+		update_local_log(dir_name);
 
 		download_repo_log(dir_name, slice_name);
 		check_repo_log(dir_name, slice_name);

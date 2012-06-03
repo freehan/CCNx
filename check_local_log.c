@@ -138,8 +138,8 @@ void compare_log_file(const char *path) {
 }
 
 int main(int argc, char const *argv[]) {
-	generate_log_file(".");
-	compare_log_file(".");
+	// generate_log_file(".");
+	// compare_log_file(".");
 	
 	return 0;
 }
