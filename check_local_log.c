@@ -20,7 +20,7 @@ char timestamp[15];
 void show_modified_time(char *filename) {
 	struct stat b;
 	if (!stat(filename, &b)) {
-		strftime(timestamp, 100, "%Y%m%d%H%M%S", localtime( &b.st_mtime));
+		strftime(timestamp, 100, "%Y%m%d%H%M%S", localtime(&b.st_mtime));
 	} else {
 		printf("Cannot display the time.\n");
 
@@ -70,16 +70,23 @@ void compare_log_file(const char *path) {
 	struct stat st;
 	DIR* srcdir = opendir(path);
 	FILE* fp;
+	FILE* output;
 	char filename[20];
 	char timeTmp[15];
 	char seq[4];
-	char filepath[30];
+	char filepath_01[30];
+	char filepath_02[30];
+	char cmdTmp[60];
 
-	strcpy(filepath, path);
-	strcat(filepath, "/.locallog");
+	strcpy(filepath_01, path);
+	strcat(filepath_01, "/.locallog");
+
+	strcpy(filepath_02, filepath_01);
+	strcat(filepath_02, "Tmp");
 
 	// Generate the local log file
-	fp = fopen(filepath, "r");
+	fp = fopen(filepath_01, "r");
+	output = fopen(filepath_02, "w");
 
 	while((dent = readdir(srcdir)) != NULL) { 
 		// Not the files we need
@@ -100,9 +107,14 @@ void compare_log_file(const char *path) {
 				show_modified_time(dent->d_name);
 
 				// Compare the timestamp
-				if (strcmp(timeTmp, timestamp) != 0) {
+				if (strcmp(timeTmp, timestamp) == 0) {
+					fprintf(output, "%s\t%s\t%s\n", filename, timeTmp, seq);
+				} else {
 					// The file has been modified
+					fprintf(output, "%s\t%s\t%03d\n", filename, timestamp, atoi(seq) + 1);
 				}
+
+				break;
 			}
 		}
 	}
@@ -111,6 +123,16 @@ void compare_log_file(const char *path) {
 
 	// Close the log file
 	fclose(fp);
+	fclose(output);
+
+	strcpy(cmdTmp, "rm ");
+	strcat(cmdTmp, filepath_01);
+	system(cmdTmp);
+	strcpy(cmdTmp, "mv ");
+	strcat(cmdTmp, filepath_02);
+	strcat(cmdTmp, " ");
+	strcat(cmdTmp, filepath_01);
+	system(cmdTmp);
 
 	return;
 }
