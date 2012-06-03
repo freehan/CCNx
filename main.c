@@ -150,6 +150,7 @@ void check_repo_log(char *dir, char * slice)
 	FILE * fp_repo;
 	FILE * fp_local;
 	FILE * fp_new_repo;
+	FILE * fp_new_local;
 
 	char repo_file_name[50];
 	char repo_user_name[50];
@@ -162,20 +163,23 @@ void check_repo_log(char *dir, char * slice)
 	char local_log[50];
 
 	char new_repo_log[50];
-
+	char new_local_log[50];
 	//strcpy(dir,"~/Documents/sync_folder"); //test
 
 	strcpy(repo_log,dir);
 	strcpy(local_log,dir);
 	strcpy(new_repo_log,dir);
+	strcpy(new_local_log,dir);
 
 	strcat(repo_log,"/.repolog");
 	strcat(local_log,"/.locallog");
 	strcat(new_repo_log,"/.repologtmp");
+	strcat(new_local_log,"/.locallogtmp");
 
 	fp_repo=fopen(repo_log,"r");
 	fp_local=fopen(local_log,"r");
 	fp_new_repo=fopen(new_repo_log,"w");
+	fp_new_local=fopen(new_local_log,"w");
 
 	while (fscanf(fp_repo, "%s %s %s", repo_file_name, repo_user_name, repo_seq_no) != EOF)
 	{
@@ -196,18 +200,24 @@ void check_repo_log(char *dir, char * slice)
 		{
 			get_file(dir, repo_file_name, slice);
 
-			fprintf(fp_new_repo, "%s\t%s\t%s\n",repo_file_name,repo_user_name,repo_seq_no);
+			show_modified_time(dir,repo_file_name);
+			fprintf(fp_new_local,"%s\t%s\t%s\t%s\n",repo_file_name, repo_user_name, timestamp, repo_seq_no);
+			fprintf(fp_new_repo, "%s\t%s\t%s\n", repo_file_name, repo_user_name, repo_seq_no);
 		}
 		else if (atoi(local_seq_no) > atoi(repo_seq_no))
 		{
 			put_file(dir, local_file_name, slice);
 
+			show_modified_time(dir,local_file_name);
+			fprintf(fp_new_local,"%s\t%s\t%s\t%s\n",local_file_name, local_user_name, timestamp, local_seq_no);
 			fprintf(fp_new_repo, "%s\t%s\t%s\n",local_file_name,local_user_name,local_seq_no);
 		}
 		else if (atoi(local_seq_no) < atoi(repo_seq_no))
 		{
 			get_file(dir, repo_file_name, slice);
 
+			show_modified_time(dir,repo_file_name);
+			fprintf(fp_new_local,"%s\t%s\t%s\t%s\n",repo_file_name, repo_user_name, timestamp, repo_seq_no);
 			fprintf(fp_new_repo, "%s\t%s\t%s\n",repo_file_name,repo_user_name,repo_seq_no);
 		}
 //		else  // local_seq_no == repo_seq_no ---> conflict resolving
@@ -237,6 +247,8 @@ void check_repo_log(char *dir, char * slice)
 		{
 			put_file(dir,local_file_name,slice);
 
+			show_modified_time(dir,local_file_name);
+			fprintf(fp_new_local,"%s\t%s\t%s\t%s\n",local_file_name, local_user_name, timestamp, local_seq_no);
 			fprintf(fp_new_repo, "%s\t%s\t%s\n",local_file_name,local_user_name,local_seq_no);
 		}
 	}
@@ -244,6 +256,7 @@ void check_repo_log(char *dir, char * slice)
 	fclose(fp_repo);
 	fclose(fp_local);
 	fclose(fp_new_repo);
+	fclose(fp_new_local);
 
 
 
@@ -259,11 +272,19 @@ void check_repo_log(char *dir, char * slice)
 	strcat(cmdTmp, repo_log);
 	system(cmdTmp);
 
+
+	strcpy(cmdTmp, "rm ");
+	strcat(cmdTmp, local_log);
+	system(cmdTmp);
+
+	strcpy(cmdTmp, "mv ");
+	strcat(cmdTmp, new_local_log);
+	strcat(cmdTmp, " ");
+	strcat(cmdTmp, local_log);
+	system(cmdTmp);
+
 	//synchronize local repolog to repository repolog
 	put_file(dir,".repolog",slice);
-
-	//update locallog
-	//update_local_log(dir);
 
 	return;
 }

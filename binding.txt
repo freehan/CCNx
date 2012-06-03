@@ -1,4 +1,4 @@
 ./try
-/4test
+/7test
 key
 
