@@ -76,6 +76,8 @@ void check_repo_log(char *dir, char * slice)
 //
 //		}
 	}
+	fclose(fp_repo);
+	fclose(fp_local);
 }
 	/*
 	if (local_new) {
@@ -95,8 +97,6 @@ void check_repo_log(char *dir, char * slice)
 		}
 	}
 	*/
-
-}
 
 void put_file(char * dir_name, char * file_name, char * slice_name) {
 	// put_log;
