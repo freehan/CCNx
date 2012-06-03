@@ -134,5 +134,16 @@ int main(int argc, char **argv) {
 	// Create the local log file
 	generate_log_file(dir_name);
 
+	//put initial repolog to the CCNr
+	strcpy(shell, "sh put_file.sh");
+	strcat(shell, " ");
+	strcat(shell, slice_name);
+	strcat(shell, " ");
+	strcat(shell, ".locallog");
+	strcat(shell, " ");
+	strcat(shell, dir_name);
+	printf("%s\n", shell);
+	system(shell);
+	 
 	return 0;
 }
