@@ -120,7 +120,7 @@ int main(int argc, char **argv) {
 	}
 
 	// Output the binding
-	fp = fopen("binding.txt", "a");
+	fp = fopen(".binding", "a");
 	fprintf(fp, "%s\n", dir_name);
 	fprintf(fp, "%s\n", slice_name);
 	fprintf(fp, "%s\n\n", key);

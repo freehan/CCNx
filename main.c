@@ -355,7 +355,7 @@ int main(int argc, char const *argv[]) {
 	FILE *fp;
 	int found = 0;
 
-	fp = fopen("binding.txt", "r");
+	fp = fopen(".binding", "r");
 	if(fp == NULL)
 	{
 		printf("cannot find binding.txt\n");
