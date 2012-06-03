@@ -16,15 +16,23 @@
 
 char timestamp[15];
 
-void show_modified_time(char *filename) {
+void show_modified_time(char* filepath, char* filename) {
 	struct stat b;
-	if (!stat(filename, &b)) {
+	char path[50];
+
+	strcpy(path, filepath);
+	strcat(path, "/");
+	strcat(path, filename);
+
+	if (!stat(path, &b)) {
 		strftime(timestamp, 100, "%Y%m%d%H%M%S", localtime(&b.st_mtime));
 	} else {
 		printf("Cannot display the time.\n");
 
 		exit(1);
 	}
+
+	// printf("Check time: %s -> %s\n", path, timestamp);
 
 	return;
 }
@@ -39,12 +47,15 @@ void update_local_log(const char *path) {
 	char filename[20];
 	char timeTmp[15];
 	char seq[4];
-	char filepath_01[30];
-	char filepath_02[30];
-	char cmdTmp[60];
+	char filepath_01[50];
+	char filepath_02[50];
+	char cmdTmp[100];
+	int found = 0;
 
 	strcpy(filepath_01, path);
 	strcat(filepath_01, "/.locallog");
+
+	printf("Check local log file: %s\n", filepath_01);
 
 	strcpy(filepath_02, filepath_01);
 	strcat(filepath_02, "Tmp");
@@ -54,34 +65,51 @@ void update_local_log(const char *path) {
 	output = fopen(filepath_02, "w");
 
 	while((dent = readdir(srcdir)) != NULL) { 
+		found = 0;
+
 		// Not the files we need
 		if(strcmp(dent->d_name, ".") == 0 || strcmp(dent->d_name, "..") == 0) {
 			continue;
 		}
 
+		if(strcmp(dent->d_name, ".locallog") == 0 || 
+			strcmp(dent->d_name, ".locallogTmp") == 0 ||
+			strcmp(dent->d_name, ".repolog") == 0) {
+			continue;
+		}
+
+		// printf("Check file: %s\n", dent->d_name);
+
 		lstat(dent->d_name, &st);
 
 		// Check if it is a regular file
-		if (S_ISREG(st.st_mode)) {
-			show_modified_time(dent->d_name);
+		// if (S_ISREG(st.st_mode)) {
+			show_modified_time(path, dent->d_name);
 			rewind(fp);
 			while ((fscanf(fp, "%s %s %s", filename, timeTmp, seq)) != EOF) {
 				if (strcmp(filename, dent->d_name) != 0) {
 					continue;
 				}
-				show_modified_time(dent->d_name);
+
+				found = 1;
 
 				// Compare the timestamp
 				if (strcmp(timeTmp, timestamp) == 0) {
 					fprintf(output, "%s\t%s\t%s\n", filename, timeTmp, seq);
 				} else {
 					// The file has been modified
+					printf("\"%s\" has been modified\n", filename);
 					fprintf(output, "%s\t%s\t%03d\n", filename, timestamp, atoi(seq) + 1);
 				}
 
 				break;
 			}
-		}
+
+			if (found == 0) {
+				printf("Add a new file: %s \n", dent->d_name);
+				fprintf(output, "%s\t%s\t001\n", dent->d_name, timestamp);
+			}
+		// }
 	}
 
 	closedir(srcdir);
@@ -217,8 +245,9 @@ void usage()
 }
 
 int main(int argc, char const *argv[]) {
-	if(argc != 2)
+	if (argc != 2) {
 		usage();
+	}
 
 	char shell[100];
 	char slice_name[20];
@@ -244,8 +273,6 @@ int main(int argc, char const *argv[]) {
 		return 0;
 	}
 	fclose(fp);
-
-
 
 	// while (1) {
 		update_local_log(dir_name);
