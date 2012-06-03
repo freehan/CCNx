@@ -63,11 +63,11 @@ void check_repo_log(char *dir, char * slice)
 		{
 			get_file(dir, local_file_name, slice);
 		}
-		else if (local_seq_no > repo_seq_no)
+		else if (atoi(local_seq_no) > atoi(repo_seq_no))
 		{
 			put_file(dir, repo_file_name, slice);
 		}
-		else if (local_seq_no < repo_seq_no)
+		else if (atoi(local_seq_no) < atoi(repo_seq_no))
 		{
 			get_file(dir, local_file_name, slice);
 		}
