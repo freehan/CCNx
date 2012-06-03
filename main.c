@@ -42,6 +42,7 @@ void update_local_log(const char *path) {
 	char filepath_01[30];
 	char filepath_02[30];
 	char cmdTmp[60];
+	int found = 0;
 
 	strcpy(filepath_01, path);
 	strcat(filepath_01, "/.locallog");
@@ -54,6 +55,8 @@ void update_local_log(const char *path) {
 	output = fopen(filepath_02, "w");
 
 	while((dent = readdir(srcdir)) != NULL) { 
+		found = 0;
+
 		// Not the files we need
 		if(strcmp(dent->d_name, ".") == 0 || strcmp(dent->d_name, "..") == 0) {
 			continue;
@@ -69,6 +72,8 @@ void update_local_log(const char *path) {
 				if (strcmp(filename, dent->d_name) != 0) {
 					continue;
 				}
+
+				found = 1;
 				show_modified_time(dent->d_name);
 
 				// Compare the timestamp
@@ -80,6 +85,10 @@ void update_local_log(const char *path) {
 				}
 
 				break;
+			}
+
+			if (found == 0) {
+				fprintf(output, "%s\t%s\t001\n", filename, timestamp);
 			}
 		}
 	}
@@ -220,8 +229,9 @@ void usage()
 }
 
 int main(int argc, char const *argv[]) {
-	if(argc != 2)
+	if (argc != 2) {
 		usage();
+	}
 
 	char shell[100];
 	char slice_name[20];
