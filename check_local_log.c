@@ -20,6 +20,8 @@ void show_modified_time(char *filename) {
 		strftime(timestamp, 100, "%Y%m%d%H%M%S", localtime( &b.st_mtime));
 	} else {
 		printf("Cannot display the time.\n");
+
+		exit(1);
 	}
 
 	return;
@@ -72,7 +74,6 @@ void compare_log_file(const char *path) {
 
 	strcpy(filepath, path);
 	strcat(filepath, "/.locallog");
-	printf("path = %s\n", filepath);
 
 	// Generate the local log file
 	fp = fopen(filepath, "r");
@@ -96,9 +97,10 @@ void compare_log_file(const char *path) {
 				show_modified_time(dent->d_name);
 
 				// Compare the timestamp
-				// printf("file = %s\n", filename);
-				// printf("log: %s, file: %s, strcmp: %d\n", timeTmp, timestamp,
-								// strcmp(timeTmp, timestamp));
+				if (strcmp(timeTmp, timestamp) != 0) {
+					// The file has been modified
+					
+				}
 
 				break;
 			}
