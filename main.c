@@ -230,7 +230,7 @@ void check_repo_log(char *dir, char * slice)
 	rewind(fp_local);
 	while (fscanf(fp_local, "%s %s %s %s", local_file_name, local_user_name, local_time_stamp, local_seq_no) != EOF)
 	{
-		printf("local log:  %s\t%s\t%s\t%d\n",local_file_name, local_user_name, local_time_stamp, local_seq_no);
+		printf("local log:  %s\t%s\t%s\t%s\n",local_file_name, local_user_name, local_time_stamp, local_seq_no);
 		//is_found=0 if a file in repo cannot be found in local
 		//        =1 otherwise
 		int is_found=0;
