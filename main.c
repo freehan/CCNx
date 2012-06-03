@@ -225,7 +225,7 @@ int main(int argc, char const *argv[]) {
 
 	char shell[100];
 	char slice_name[20];
-	char dir_name[20];
+	char dir_name[50];
 	char group_key[20];
 	FILE *fp;
 	int found = 0;
@@ -260,6 +260,8 @@ int main(int argc, char const *argv[]) {
 		download_repo_log(dir_name, slice_name);
 		check_repo_log(dir_name, slice_name);
 	// }
+
+	printf("success!!!!!!!!!!\n");
 	
 	return 0;
 }
