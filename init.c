@@ -39,9 +39,12 @@ void generate_log_file(const char *path) {
 	struct stat st;
 	DIR* srcdir = opendir(path);
 	FILE* fp;
+	char filepath[50];
 
 	// Generate the local log file
-	fp = fopen(".locallog", "w");
+	strcpy(filepath, path);
+	strcat(filepath, "/.locallog");
+	fp = fopen(filepath, "w");
 
 	while((dent = readdir(srcdir)) != NULL) { 
 		// Not the files we need
@@ -71,7 +74,7 @@ void generate_log_file(const char *path) {
 void usage() {
 	printf("./init [-d directory] [-s Slice_Prefix] [-k Group_Key]\n");
 
-	return;
+	exit(1);
 }
 
 int main(int argc, char **argv) {
