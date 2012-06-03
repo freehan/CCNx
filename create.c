@@ -13,7 +13,7 @@
 
 // Show the usage
 void usage() {
-	printf("./create directory [-s Slice_Prefix] [-k Group_Key]\n");
+	printf("./create [-d directory] [-s Slice_Prefix] [-k Group_Key]\n");
 
 	return;
 }
@@ -23,21 +23,29 @@ int main(int argc, char **argv) {
 	char shell[100];
 	char slice_name[20];
 	char dir_name[20];
+	char key[20];
 	FILE *fp;
 
 	strcpy(shell, "sh create.sh ");
 
-	while((opt = getopt(argc, argv,"s:k:")) != -1) {
+	if(argc != 7)
+		usage();
+
+	while((opt = getopt(argc, argv,"d:s:k:")) != -1) {
 		switch(opt) {
+			case 'd':
+				printf("directory = %s\n", optarg);
+				strcpy(dir_name, optarg);
+				break;
 			case 's':
 				// Slice name
 				printf("slice_name = %s\n", optarg);
 				strcpy(slice_name, optarg);
 				break;
 			case 'k':
-				// Directory name
-				printf("dir_name = %s\n", optarg);
-				strcpy(dir_name, optarg);
+				// Group key
+				printf("group key = %s\n", optarg);
+				strcpy(key, optarg);
 				break;
 			default:
 				// Show the usage
@@ -51,7 +59,7 @@ int main(int argc, char **argv) {
 	fp = fopen("binding.txt", "a");
 	fprintf(fp, "%s\n", dir_name);
 	fprintf(fp, "%s\n", slice_name);
-	fprintf(fp, "%s\n\n", slice_name);
+	fprintf(fp, "%s\n\n", key);
 	fclose(fp);
 
 	strcat(shell, dir_name);

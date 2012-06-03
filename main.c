@@ -5,20 +5,6 @@
 // History:
 //		20120602	Kuan-Hao		First release
 
-
-// ------------------------------------------------------------
-// Log Filename Format
-
-// .locallog
-//		Filename	Username	Time	Seq#
-//		file01.txt	yifei		10001	001
-//		file02.txt	minhan		10020	002
-
-// .repolog
-//		Filename	Username	Seq#
-//		file01.txt	yifei		001
-//		file02.txt	minhan		002
-// ------------------------------------------------------------
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,13 +19,13 @@ void update_local_log() {
 	*/
 }
 
-void download_repo_log() {
-	
-
+void download_repo_log(char * dir_name, char * slice_name) {
+	get_file(dir_name, ".repolog", slice_name);
 }
 
 //@param dir: the path of the folder to be synchronized
-void check_repo_log(char dir []) {
+void check_repo_log(char *dir, char * slice)
+{
 	FILE * fp_repo;
 	FILE * fp_local;
 	char repo_file_name[50];
@@ -75,20 +61,20 @@ void check_repo_log(char dir []) {
 		}
 		if (is_found==0)
 		{
-			get_file();
+			get_file(dir, local_file_name, slice);
 		}
 		else if (local_seq_no > repo_seq_no)
 		{
-			put_file();
+			put_file(dir, repo_file_name, slice);
 		}
 		else if (local_seq_no < repo_seq_no)
 		{
-			get_file();
+			get_file(dir, local_file_name, slice);
 		}
-		else
-		{
-
-		}
+//		else
+//		{
+//
+//		}
 	}
 }
 	/*
@@ -112,13 +98,34 @@ void check_repo_log(char dir []) {
 
 }
 
-void put_file() {
+void put_file(char * dir_name, char * file_name, char * slice_name) {
 	// put_log;
 	// put_file;
+	char shell[100];
+	strcpy(shell,"sh put_file.sh");
+	strcat(shell," ");
+	strcat(shell,slice_name);
+	strcat(shell," ");
+	strcat(shell,file_name);
+	strcat(shell," ");
+	strcat(shell,dir_name);
+	printf("%s\n",shell);
+	system(shell);
+
 }
 
-void get_file() {
+void get_file(char * dir_name, char * file_name, char * slice_name) {
 	// get_file;
+	char shell[100];
+	strcpy(shell,"sh get_file.sh");
+	strcat(shell," ");
+	strcat(shell,slice_name);
+	strcat(shell," ");
+	strcat(shell,file_name);
+	strcat(shell," ");
+	strcat(shell,dir_name);
+	printf("%s\n",shell);
+	system(shell);
 }
 void usage()
 {
@@ -155,10 +162,13 @@ int main(int argc, char const *argv[]) {
 	}
 	fclose(fp);
 
+
+
 	// while (1) {
 		update_local_log();
-		download_repo_log();
-		check_repo_log(dir_name);
+
+		download_repo_log(dir_name, slice_name);
+		check_repo_log(dir_name, slice_name);
 	// }
 	
 	return 0;

@@ -2,4 +2,5 @@
 
 # $1: slice name
 # $2: filename
-ccngetfile /$1/$2 ./$2
+# $3: directory 
+ccngetfile $1/$2 $3/$2
