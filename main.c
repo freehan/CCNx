@@ -52,7 +52,6 @@ void update_local_log(const char *path) {
 	char cmdTmp[100];
 	int found = 0;
 
-	printf("%s\n", path);
 	strcpy(filepath_01, path);
 	strcat(filepath_01, "/.locallog");
 
@@ -74,7 +73,8 @@ void update_local_log(const char *path) {
 		}
 
 		if(strcmp(dent->d_name, ".locallog") == 0 || 
-			strcmp(dent->d_name, ".locallogTmp") == 0) {
+			strcmp(dent->d_name, ".locallogTmp") == 0 ||
+			strcmp(dent->d_name, ".repolog") == 0) {
 			continue;
 		}
 
@@ -98,6 +98,7 @@ void update_local_log(const char *path) {
 					fprintf(output, "%s\t%s\t%s\n", filename, timeTmp, seq);
 				} else {
 					// The file has been modified
+					printf("\"%s\" has been modified\n", filename);
 					fprintf(output, "%s\t%s\t%03d\n", filename, timestamp, atoi(seq) + 1);
 				}
 
