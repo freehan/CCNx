@@ -40,6 +40,10 @@ void generate_log_file(const char *path) {
 	DIR* srcdir = opendir(path);
 	FILE* fp;
 	char filepath[50];
+	char *username;
+
+	// Get username
+	username = getenv("USER");
 
 	// Generate the local log file
 	strcpy(filepath, path);
@@ -58,7 +62,7 @@ void generate_log_file(const char *path) {
 		if (S_ISREG(st.st_mode)) {
 			show_modified_time(dent->d_name);
 			// Save the filename, timestamp and seq # into the log file
-			fprintf(fp, "%s\t%s\t001\n", dent->d_name, timestamp);  
+			fprintf(fp, "%s\t%s\t%s\t001\n", dent->d_name, username, timestamp);  
 		}
 	}
 

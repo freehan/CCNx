@@ -51,14 +51,20 @@ void update_local_log(const char *path) {
 	char filepath_02[50];
 	char cmdTmp[100];
 	int found = 0;
+	char* username;
+
+	// Get username
+	username = getenv("USER");
 
 	strcpy(filepath_01, path);
 	strcat(filepath_01, "/.locallog");
 
-	printf("Check local log file: %s\n", filepath_01);
-
 	strcpy(filepath_02, filepath_01);
 	strcat(filepath_02, "Tmp");
+
+	printf("Check local log file:\n");
+	printf("\tfilepath_01: %s\n", filepath_01);
+	printf("\tfilepath_02: %s\n", filepath_02);
 
 	// Generate the local log file
 	fp = fopen(filepath_01, "r");
@@ -74,7 +80,8 @@ void update_local_log(const char *path) {
 
 		if(strcmp(dent->d_name, ".locallog") == 0 || 
 			strcmp(dent->d_name, ".locallogTmp") == 0 ||
-			strcmp(dent->d_name, ".repolog") == 0) {
+			strcmp(dent->d_name, ".repolog") == 0 ||
+			strcmp(dent->d_name, ".DS_Store") == 0) {
 			continue;
 		}
 
@@ -95,11 +102,13 @@ void update_local_log(const char *path) {
 
 				// Compare the timestamp
 				if (strcmp(timeTmp, timestamp) == 0) {
-					fprintf(output, "%s\t%s\t%s\n", filename, timeTmp, seq);
+					fprintf(output, "%s\t%s\t%s\t%s\n", 
+							filename, username, timeTmp, seq);
 				} else {
 					// The file has been modified
 					printf("\"%s\" has been modified\n", filename);
-					fprintf(output, "%s\t%s\t%03d\n", filename, timestamp, atoi(seq) + 1);
+					fprintf(output, "%s\t%s\t%s\t%03d\n", 
+							filename, username, timestamp, atoi(seq) + 1);
 				}
 
 				break;
@@ -107,7 +116,8 @@ void update_local_log(const char *path) {
 
 			if (found == 0) {
 				printf("Add a new file: %s \n", dent->d_name);
-				fprintf(output, "%s\t%s\t001\n", dent->d_name, timestamp);
+				fprintf(output, "%s\t%s\t%s\t001\n", 
+						dent->d_name, username, timestamp);
 			}
 		// }
 	}
@@ -121,6 +131,7 @@ void update_local_log(const char *path) {
 	strcpy(cmdTmp, "rm ");
 	strcat(cmdTmp, filepath_01);
 	system(cmdTmp);
+
 	strcpy(cmdTmp, "mv ");
 	strcat(cmdTmp, filepath_02);
 	strcat(cmdTmp, " ");
