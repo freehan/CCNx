@@ -1,19 +1,22 @@
 // Filename:
-//		ccnx_create.c
+//		init.c
 // Program:
-// 		Create a directory and a slice. Also generate a "binding.txt" which
-//		contains the information of slice name, directory name and grou key.
+// 		Create a directory and a slice. Generate a "binding.txt" which
+//		contains the information of slice name, directory name and group key 
+//		and .locallog which contains the file list. 
 //		Basically it uses the "create.sh".
 // History:
-//		20120601	Kuan-Hao		First release
+//		20120602	Kuan-Hao		First release
 
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 
+#include "check_local_log.c"
+
 // Show the usage
 void usage() {
-	printf("./create [-d directory] [-s Slice_Prefix] [-k Group_Key]\n");
+	printf("./init [-d directory] [-s Slice_Prefix] [-k Group_Key]\n");
 
 	return;
 }
@@ -34,6 +37,7 @@ int main(int argc, char **argv) {
 	while((opt = getopt(argc, argv,"d:s:k:")) != -1) {
 		switch(opt) {
 			case 'd':
+				// Directory name
 				printf("directory = %s\n", optarg);
 				strcpy(dir_name, optarg);
 				break;
@@ -70,6 +74,9 @@ int main(int argc, char **argv) {
 	// It creates a folder and a slice
 	printf("%s\n", shell);
 	system(shell);
+
+	// Create the local log file
+	check_local_log(dir_name);
 
 	return 0;
 }
