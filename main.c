@@ -73,7 +73,8 @@ void update_local_log(const char *path) {
 		}
 
 		if(strcmp(dent->d_name, ".locallog") == 0 || 
-			strcmp(dent->d_name, ".locallogTmp") == 0) {
+			strcmp(dent->d_name, ".locallogTmp") == 0 ||
+			strcmp(dent->d_name, ".repolog") == 0) {
 			continue;
 		}
 
