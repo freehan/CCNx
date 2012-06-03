@@ -61,15 +61,15 @@ void check_repo_log(char *dir, char * slice)
 		}
 		if (is_found==0)
 		{
-			get_file(dir, local_file_name, slice);
+			get_file(dir, repo_file_name, slice);
 		}
 		else if (atoi(local_seq_no) > atoi(repo_seq_no))
 		{
-			put_file(dir, repo_file_name, slice);
+			put_file(dir, local_file_name, slice);
 		}
 		else if (atoi(local_seq_no) < atoi(repo_seq_no))
 		{
-			get_file(dir, local_file_name, slice);
+			get_file(dir, repo_file_name, slice);
 		}
 //		else
 //		{
