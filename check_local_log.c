@@ -6,11 +6,14 @@
 //		20120602	Kuan-Hao		First release
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
 #include <unistd.h>
 #include <time.h>
+
+#include "check_local_log.h"
 
 char timestamp[15];
 
@@ -99,10 +102,7 @@ void compare_log_file(const char *path) {
 				// Compare the timestamp
 				if (strcmp(timeTmp, timestamp) != 0) {
 					// The file has been modified
-					
 				}
-
-				break;
 			}
 		}
 	}
