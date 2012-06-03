@@ -5,20 +5,6 @@
 // History:
 //		20120602	Kuan-Hao		First release
 
-
-// ------------------------------------------------------------
-// Log Filename Format
-
-// .locallog
-//		Filename	Username	Time	Seq#
-//		file01.txt	yifei		10001	001
-//		file02.txt	minhan		10020	002
-
-// .repolog
-//		Filename	Username	Seq#
-//		file01.txt	yifei		001
-//		file02.txt	minhan		002
-// ------------------------------------------------------------
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
