@@ -38,17 +38,24 @@ void generate_log_file(const char *path) {
 	struct dirent* dent;
 	struct stat st;
 	DIR* srcdir = opendir(path);
-	FILE* fp;
-	char filepath[50];
+	FILE* fp_local;
+	FILE* fp_repo;
+	char filepath_01[50];
+	char filepath_02[50];
 	char *username;
 
 	// Get username
 	username = getenv("USER");
 
 	// Generate the local log file
-	strcpy(filepath, path);
-	strcat(filepath, "/.locallog");
-	fp = fopen(filepath, "w");
+	strcpy(filepath_01, path);
+	strcat(filepath_01, "/.locallog");
+	fp_local = fopen(filepath_01, "w");
+
+	// Generate the repo log file
+	strcpy(filepath_02, path);
+	strcat(filepath_02, "/.repolog");
+	fp_repo = fopen(filepath_02, "w");
 
 	while((dent = readdir(srcdir)) != NULL) { 
 		// Not the files we need
@@ -61,15 +68,18 @@ void generate_log_file(const char *path) {
 		// Check if it is a regular file
 		if (S_ISREG(st.st_mode)) {
 			show_modified_time(dent->d_name);
-			// Save the filename, timestamp and seq # into the log file
-			fprintf(fp, "%s\t%s\t%s\t001\n", dent->d_name, username, timestamp);  
+			// Save the filename, timestamp and seq # into the local log file
+			fprintf(fp_local, "%s\t%s\t%s\t001\t0\n", dent->d_name, username, timestamp);  
+			// Save the filename and seq # into the repo log file
+			fprintf(fp_repo, "%s\t%s\t001\t0\n", dent->d_name, username);  
 		}
 	}
 
 	closedir(srcdir);
 
 	// Close the log file
-	fclose(fp);
+	fclose(fp_local);
+	fclose(fp_repo);
 
 	return ;
 }
@@ -146,9 +156,9 @@ int main(int argc, char **argv) {
 	strcat(shell, ".repolog");
 	strcat(shell, " ");
 	strcat(shell, dir_name);
-	strcat(shell, "/.locallog");
+	strcat(shell, "/.repolog");
 	printf("%s\n", shell);
 	system(shell);
-	 
+
 	return 0;
 }
