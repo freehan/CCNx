@@ -76,7 +76,7 @@ int main(int argc, char **argv) {
 	system(shell);
 
 	// Create the local log file
-	check_local_log(dir_name);
+	generate_log_file(dir_name);
 
 	return 0;
 }
