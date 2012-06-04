@@ -91,6 +91,7 @@ void update_local_log(const char *path) {
 
 		if(strcmp(dent->d_name, ".locallog") == 0 || 
 			strcmp(dent->d_name, ".locallogTmp") == 0 ||
+			strcmp(dent->d_name, ".locallogOutput") == 0 ||
 			strcmp(dent->d_name, ".repolog") == 0 ||
 			strcmp(dent->d_name, ".DS_Store") == 0) {
 			continue;
@@ -129,6 +130,8 @@ void update_local_log(const char *path) {
 			if (found == 0) {
 				printf("Add a new file: %s \n", dent->d_name);
 				fprintf(fp_tmp, "%s\t%s\t%s\t001\t0\n",
+						dent->d_name, username, timestamp);
+				fprintf(fp_output, "%s\t%s\t%s\t001\t0\n",
 						dent->d_name, username, timestamp);
 			}
 		// }
