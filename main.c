@@ -420,7 +420,7 @@ void delete_file(char *dir_name, char * file_name)
 	char shell[100];
 	strcpy(shell, "sh delete_file.sh");
 	strcat(shell, " ");
-	stccat(shell, dir_name);
+	strcat(shell, dir_name);
 	strcat(shell, " ");
 	strcat(shell, file_name);
 	printf("%s\n", shell);
