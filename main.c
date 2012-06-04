@@ -25,7 +25,7 @@ void show_modified_time(char* filepath, char* filename) {
 	strcat(path, filename);
 
 	if (!stat(path, &b)) {
-		strftime(timestamp, 100, "%Y%m%d%H%M%S", localtime(&b.st_mtime));
+		strftime(timestamp, 100, "%Y%m%s%H%M%S", localtime(&b.st_mtime));
 	} else {
 		printf("Cannot display the time.\n");
 
@@ -159,7 +159,7 @@ void update_local_log(const char *path) {
 			if (strcmp(filename, filenameTmp) == 0) {
 				fprintf(fp_output, "%s\t%s\t%s\t%s\t%s\n",
 							filename, username, timeTmp, seq, delFlag);
-				found == 1;
+				found = 1;
 				break;
 			}
 		}
@@ -236,7 +236,7 @@ void check_repo_log(char *dir, char * slice)
 	fp_new_repo=fopen(new_repo_log,"w");
 	fp_new_local=fopen(new_local_log,"w");
 
-	while (fscanf(fp_repo, "%s %s %s %d", repo_file_name, repo_user_name, repo_seq_no, repo_is_delete) != EOF)
+	while (fscanf(fp_repo, "%s %s %s %d", repo_file_name, repo_user_name, repo_seq_no, &repo_is_delete) != EOF)
 	{
 		printf("repolog:  %s\t%s\t%s\t%d\n",repo_file_name, repo_user_name, repo_seq_no, repo_is_delete);
 		//is_found=0 if a file in repo cannot be found in local
@@ -244,7 +244,7 @@ void check_repo_log(char *dir, char * slice)
 		int is_found=0;
 		rewind(fp_local);
 		while (fscanf(fp_local, "%s %s %s %s %d",
-					local_file_name, local_user_name, local_time_stamp, local_seq_no, local_is_delete) != EOF)
+					local_file_name, local_user_name, local_time_stamp, local_seq_no, &local_is_delete) != EOF)
 		{
 			if (strcmp(local_file_name, repo_file_name)==0)
 			{
@@ -300,7 +300,7 @@ void check_repo_log(char *dir, char * slice)
 
 	rewind(fp_local);
 	while (fscanf(fp_local, "%s %s %s %s %d",
-			local_file_name, local_user_name, local_time_stamp, local_seq_no, local_is_delete) != EOF)
+			local_file_name, local_user_name, local_time_stamp, local_seq_no, &local_is_delete) != EOF)
 	{
 		printf("local log:  %s\t%s\t%s\t%s\t%d\n",
 				local_file_name, local_user_name, local_time_stamp, local_seq_no, local_is_delete);
@@ -309,7 +309,7 @@ void check_repo_log(char *dir, char * slice)
 		int is_found=0;
 		rewind(fp_repo);
 		while (fscanf(fp_repo, "%s %s %s %d",
-				repo_file_name, repo_user_name, repo_seq_no, repo_is_delete) != EOF)
+				repo_file_name, repo_user_name, repo_seq_no, &repo_is_delete) != EOF)
 		{
 			if (strcmp(local_file_name, repo_file_name)==0)
 			{
