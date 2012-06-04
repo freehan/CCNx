@@ -178,7 +178,8 @@ void update_local_log(const char *path) {
 	
 	strcpy(cmdTmp, "rm ");
 	strcat(cmdTmp, filepath_01);
-	strcat(cmdTmp, " ")
+	system(cmdTmp);
+	strcpy(cmdTmp, "rm ");
 	strcat(cmdTmp, filepath_02);
 	system(cmdTmp);
 
