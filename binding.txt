@@ -1,4 +1,4 @@
-./try
-/7test
+/Users/fyf513/Documents/sync_folder
+/try/
 key
 
