@@ -151,7 +151,7 @@ void update_local_log(const char *path) {
 		strcat(stringTmp, "\t");
 		strcat(stringTmp, seq);
 		strcat(stringTmp, "\t");
-		strcat(stringTmp, 1);
+		strcat(stringTmp, "1");
 
 		found = 0;
 		while ((fscanf(fp_tmp, "%s %s %s %s %s", 
