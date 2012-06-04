@@ -211,6 +211,11 @@ void check_repo_log(char *dir, char * slice)
 	char local_seq_no[50];
 	char repo_log[50];
 	char local_log[50];
+	int local_is_delete;
+	int repo_is_delete;	//if the file at the other side is deleted then set this flag as 1
+						//Note: ccnr currently doesn't support delete operation
+						//the deleted file is actually present in repo, the corresponding flag is set as 1
+						//we acutally delete the file in the file system by reading the this flag
 
 	char new_repo_log[50];
 	char new_local_log[50];
@@ -231,14 +236,15 @@ void check_repo_log(char *dir, char * slice)
 	fp_new_repo=fopen(new_repo_log,"w");
 	fp_new_local=fopen(new_local_log,"w");
 
-	while (fscanf(fp_repo, "%s %s %s", repo_file_name, repo_user_name, repo_seq_no) != EOF)
+	while (fscanf(fp_repo, "%s %s %s %d", repo_file_name, repo_user_name, repo_seq_no, repo_is_delete) != EOF)
 	{
-		printf("repolog:  %s\t%s\t%s\n",repo_file_name, repo_user_name, repo_seq_no);
+		printf("repolog:  %s\t%s\t%s\t%d\n",repo_file_name, repo_user_name, repo_seq_no, repo_is_delete);
 		//is_found=0 if a file in repo cannot be found in local
 		//        =1 otherwise
 		int is_found=0;
 		rewind(fp_local);
-		while (fscanf(fp_local, "%s %s %s %s", local_file_name, local_user_name, local_time_stamp, local_seq_no) != EOF)
+		while (fscanf(fp_local, "%s %s %s %s %d",
+					local_file_name, local_user_name, local_time_stamp, local_seq_no, local_is_delete) != EOF)
 		{
 			if (strcmp(local_file_name, repo_file_name)==0)
 			{
@@ -251,24 +257,40 @@ void check_repo_log(char *dir, char * slice)
 			get_file(dir, repo_file_name, slice);
 
 			show_modified_time(dir,repo_file_name);
-			fprintf(fp_new_local,"%s\t%s\t%s\t%s\n",repo_file_name, repo_user_name, timestamp, repo_seq_no);
-			fprintf(fp_new_repo, "%s\t%s\t%s\n", repo_file_name, repo_user_name, repo_seq_no);
+			fprintf(fp_new_local,"%s\t%s\t%s\t%s\t%d\n",
+					repo_file_name, repo_user_name, timestamp, repo_seq_no, repo_is_delete);
+			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n",
+					repo_file_name, repo_user_name, repo_seq_no, repo_is_delete);
+		}
+		//if repo_is_delete==1, it means that the file named repo_file_name is deleted at the other side
+		//, thus it should be deleted in the local file system
+		else if (repo_is_delete==1)
+		{
+			delete_file(dir,repo_file_name);
+			fprintf(fp_new_local,"%s\t%s\t%s\t%s\t%d\n",
+					repo_file_name, repo_user_name, timestamp, repo_seq_no, repo_is_delete);
+			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n",
+					repo_file_name, repo_user_name, repo_seq_no, repo_is_delete);
 		}
 		else if (atoi(local_seq_no) > atoi(repo_seq_no))
 		{
 			put_file(dir, local_file_name, slice);
 
 			show_modified_time(dir,local_file_name);
-			fprintf(fp_new_local,"%s\t%s\t%s\t%s\n",local_file_name, local_user_name, timestamp, local_seq_no);
-			fprintf(fp_new_repo, "%s\t%s\t%s\n",local_file_name,local_user_name,local_seq_no);
+			fprintf(fp_new_local,"%s\t%s\t%s\t%s\t%d\n",
+					local_file_name, local_user_name, timestamp, local_seq_no, local_is_delete);
+			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n",
+					local_file_name,local_user_name,local_seq_no, local_is_delete);
 		}
 		else if (atoi(local_seq_no) < atoi(repo_seq_no))
 		{
 			get_file(dir, repo_file_name, slice);
 
 			show_modified_time(dir,repo_file_name);
-			fprintf(fp_new_local,"%s\t%s\t%s\t%s\n",repo_file_name, repo_user_name, timestamp, repo_seq_no);
-			fprintf(fp_new_repo, "%s\t%s\t%s\n",repo_file_name,repo_user_name,repo_seq_no);
+			fprintf(fp_new_local,"%s\t%s\t%s\t%s\t%d\n",
+					repo_file_name, repo_user_name, timestamp, repo_seq_no, repo_is_delete);
+			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n",
+					repo_file_name, repo_user_name, repo_seq_no, repo_is_delete);
 		}
 //		else  // local_seq_no == repo_seq_no ---> conflict resolving
 //		{
@@ -277,14 +299,17 @@ void check_repo_log(char *dir, char * slice)
 	}
 
 	rewind(fp_local);
-	while (fscanf(fp_local, "%s %s %s %s", local_file_name, local_user_name, local_time_stamp, local_seq_no) != EOF)
+	while (fscanf(fp_local, "%s %s %s %s %d",
+			local_file_name, local_user_name, local_time_stamp, local_seq_no, local_is_delete) != EOF)
 	{
-		printf("local log:  %s\t%s\t%s\t%s\n",local_file_name, local_user_name, local_time_stamp, local_seq_no);
+		printf("local log:  %s\t%s\t%s\t%s\t%d\n",
+				local_file_name, local_user_name, local_time_stamp, local_seq_no, local_is_delete);
 		//is_found=0 if a file in repo cannot be found in local
 		//        =1 otherwise
 		int is_found=0;
 		rewind(fp_repo);
-		while (fscanf(fp_repo, "%s %s %s", repo_file_name, repo_user_name, repo_seq_no) != EOF)
+		while (fscanf(fp_repo, "%s %s %s %d",
+				repo_file_name, repo_user_name, repo_seq_no, repo_is_delete) != EOF)
 		{
 			if (strcmp(local_file_name, repo_file_name)==0)
 			{
@@ -298,8 +323,10 @@ void check_repo_log(char *dir, char * slice)
 			put_file(dir,local_file_name,slice);
 
 			show_modified_time(dir,local_file_name);
-			fprintf(fp_new_local,"%s\t%s\t%s\t%s\n",local_file_name, local_user_name, timestamp, local_seq_no);
-			fprintf(fp_new_repo, "%s\t%s\t%s\n",local_file_name,local_user_name,local_seq_no);
+			fprintf(fp_new_local,"%s\t%s\t%s\t%s\t%d\n",
+					local_file_name, local_user_name, timestamp, local_seq_no, local_is_delete);
+			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n",
+					local_file_name,local_user_name,local_seq_no, local_is_delete);
 		}
 	}
 
@@ -386,6 +413,19 @@ void get_file(char * dir_name, char * file_name, char * slice_name) {
 	printf("%s\n",shell);
 	system(shell);
 }
+
+void delete_file(char *dir_name, char * file_name)
+{
+	char shell[100];
+	strcpy(shell, "sh delete_file.sh");
+	strcat(shell, " ");
+	stccat(shell, dir_name);
+	strcat(shell, " ");
+	strcat(shell, file_name);
+	printf("%s\n", shell);
+	system(shell);
+}
+
 void usage()
 {
 	printf("cmd directory\n");
