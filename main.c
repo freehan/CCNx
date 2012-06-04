@@ -38,6 +38,7 @@ void show_modified_time(char* filepath, char* filename) {
 }
 
 void update_local_log(const char *path) {
+	printf("update local log begins \n");
 	int file_count = 0;
 	struct dirent* dent;
 	struct stat st;
@@ -50,9 +51,9 @@ void update_local_log(const char *path) {
 	char user[20];
 	char timeTmp[15];
 	char seq[4];
-	char filepath_01[50];
-	char filepath_02[50];
-	char filepath_03[50];
+	char filepath_01[100];
+	char filepath_02[100];
+	char filepath_03[100];
 	char cmdTmp[100];
 	int found = 0;
 	char* username;
@@ -473,6 +474,7 @@ int main(int argc, char const *argv[]) {
 	fclose(fp);
 
 	// while (1) {
+		printf("start to sync\n");	//test
 		update_local_log(dir_name);
 		printf("successful after update local log\n");
 		download_repo_log(dir_name, slice_name);
