@@ -77,7 +77,7 @@ void update_local_log(const char *path) {
 	printf("\tfilepath_02: %s\n", filepath_02);
 	printf("\tfilepath_03: %s\n", filepath_03);
 
-	// Generate the local log file
+	// Create the local log file
 	fp_input = fopen(filepath_01, "r");
 	fp_tmp = fopen(filepath_02, "w");
 	fp_output = fopen(filepath_03, "w");
@@ -124,7 +124,6 @@ void update_local_log(const char *path) {
 					fprintf(fp_tmp, "%s\t%s\t%s\t%03d\t%s\n",
 							filename, username, timestamp, atoi(seq) + 1, delFlag);
 				}
-
 				break;
 			}
 
@@ -135,7 +134,6 @@ void update_local_log(const char *path) {
 				fprintf(fp_output, "%s\t%s\t%s\t001\t0\n",
 						dent->d_name, username, timestamp);
 			}
-		// }
 	}
 
 	closedir(srcdir);
@@ -143,12 +141,14 @@ void update_local_log(const char *path) {
 	// Check if any file has been deleted
 	fclose(fp_tmp);
 	fp_tmp = fopen(filepath_02, "r");
+	printf("successful after creating local log file 1\n");	//test
 	rewind(fp_input);
-
-	while ((fscanf(fp_input, "%s %s %s %s %s", 
+	printf("successful after creating local log file 2\n");	//test
+	while ((fscanf(fp_input, "%s %s %s %s %s",
 					filename, user, timeTmp, seq, delFlag)) != EOF) {
 		strcpy(stringTmp, filename);
 		strcat(stringTmp, "\t");
+		printf("filename is: %s\n", filename);	//test
 		strcat(stringTmp, user);
 		strcat(stringTmp, "\t");
 		strcat(stringTmp, timeTmp);
@@ -175,7 +175,7 @@ void update_local_log(const char *path) {
 			fprintf(fp_output, "%s\n", stringTmp);
 		}
 	}
-
+	printf("successful after checking deleted file\n");	//test
 	// Close the log file
 	fclose(fp_input);
 	fclose(fp_output);
