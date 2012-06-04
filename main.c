@@ -54,11 +54,11 @@ void update_local_log(const char *path) {
 	char filepath_01[100];
 	char filepath_02[100];
 	char filepath_03[100];
-	char cmdTmp[100];
+	char cmdTmp[500];
 	int found = 0;
 	char* username;
 	char delFlag[2];
-	char stringTmp[100];
+	char stringTmp[200];
 
 	// Get username
 	username = getenv("USER");
@@ -78,13 +78,25 @@ void update_local_log(const char *path) {
 	printf("\tfilepath_03: %s\n", filepath_03);
 
 	// Create the local log file
-	//problem here: when initially there is no .locallog, fp_input returned is NULL
-	//Please fix this bug
+	while ((dent = readdir(srcdir)) != NULL)
+	{
+		found=0;
+		if (strcmp(dent->d_name, ".locallog") == 0)
+		{
+			found=1;
+			break;
+		}
+	}
+	if (found==0)
+	{
+		fopen(filepath_01, "w");
+		printf("create locallog");
+	}
 	fp_input = fopen(filepath_01, "r");
 	if (fp_input==NULL)
 		printf("fp_input is NULL\n");
 	else
-		printf("fp_input is not NULL");
+		printf("fp_input is not NULL\n");
 	fp_tmp = fopen(filepath_02, "w");
 	fp_output = fopen(filepath_03, "w");
 
@@ -103,9 +115,6 @@ void update_local_log(const char *path) {
 				|| strcmp(dent->d_name, ".DS_Store") == 0) {
 			continue;
 		}
-
-		// printf("Check file: %s\n", dent->d_name);
-
 		lstat(dent->d_name, &st);
 
 		// Check if it is a regular file
@@ -147,14 +156,11 @@ void update_local_log(const char *path) {
 	// Check if any file has been deleted
 	fclose(fp_tmp);
 	fp_tmp = fopen(filepath_02, "r");
-	printf("successful after creating local log file 1\n"); //test
 	rewind(fp_input);
-	printf("successful after creating local log file 2\n"); //test
 	while ((fscanf(fp_input, "%s %s %s %s %s", filename, user, timeTmp, seq,
 			delFlag)) != EOF) {
 		strcpy(stringTmp, filename);
 		strcat(stringTmp, "\t");
-		printf("filename is: %s\n", filename); //test
 		strcat(stringTmp, user);
 		strcat(stringTmp, "\t");
 		strcat(stringTmp, timeTmp);
@@ -181,14 +187,17 @@ void update_local_log(const char *path) {
 			fprintf(fp_output, "%s\n", stringTmp);
 		}
 	}
-	printf("successful after checking deleted file\n"); //test
+
 	// Close the log file
 	fclose(fp_input);
 	fclose(fp_output);
 
+
+
 	strcpy(cmdTmp, "rm ");
 	strcat(cmdTmp, filepath_01);
 	system(cmdTmp);
+
 	strcpy(cmdTmp, "rm ");
 	strcat(cmdTmp, filepath_02);
 	system(cmdTmp);
@@ -198,6 +207,7 @@ void update_local_log(const char *path) {
 	strcat(cmdTmp, " ");
 	strcat(cmdTmp, filepath_01);
 	system(cmdTmp);
+
 	return;
 }
 
