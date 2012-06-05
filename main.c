@@ -298,7 +298,7 @@ void check_repo_log(char *dir, char * slice) {
 			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n", repo_file_name,
 					repo_user_name, repo_seq_no, repo_is_delete);
 		}
-		else
+		else	//local seq# == repo seq#
 		{
 			fprintf(fp_new_local, "%s\t%s\t%s\t%s\t%d\n", local_file_name,
 					local_user_name, timestamp, local_seq_no, local_is_delete);
