@@ -14,13 +14,6 @@
 #include <unistd.h>
 #include <time.h>
 
-// void show_modified_time(char* filepath, char* filename);
-// void update_local_log(const char *path);
-// void download_repo_log(char * dir_name, char * slice_name);
-// void put_file(char * dir_name, char * file_name, char * slice_name);
-// void get_file(char * dir_name, char * file_name, char * slice_name);
-// void delete_file(char *dir_name, char * file_name);
-
 char timestamp[16];
 
 void show_modified_time(char* filepath, char* filename)
@@ -117,16 +110,17 @@ void update_local_log(const char *path)
 			continue;
 
 		lstat(dent->d_name, &st);
+		printf("Check file: %s\n", dent->d_name);
 
 		// Check if it is a regular file
 		// if (S_ISREG(st.st_mode)) {
 		show_modified_time(path, dent->d_name);
 
-		// rewind(fp_input);
-		fclose(fp_input);
-		fp_input = fopen(filepath_01, "r");
+		rewind(fp_input);
+
+		printf("Try to find the file: %s\n", dent->d_name);
 		while ((fscanf(fp_input, "%s %s %s %s %s", filename, user, timeTmp, seq,
-				delFlag)) != EOF)
+				delFlag)) != EOF) 
 		{
 
 			if (strcmp(filename, dent->d_name) != 0)
@@ -134,19 +128,25 @@ void update_local_log(const char *path)
 
 			found = 1;
 
+			printf("Found the file: %s\n", dent->d_name);
+
 			// Compare the timestamp
-			if (strcmp(timeTmp, timestamp) == 0)
+			if (strcmp(timeTmp, timestamp) == 0) {
+				printf("\"%s\" does not change\n", dent->d_name);
 				fprintf(fp_tmp, "%s\t%s\t%s\t%s\t%s\n", filename, username,
 						timeTmp, seq, delFlag);
-			else
+			} else {
+				printf("\"%s\" has been modified, seq# + 1\n",dent->d_name);
 				// The file has been modified
 				fprintf(fp_tmp, "%s\t%s\t%s\t%03d\t%s\n", filename, username,
 						timestamp, atoi(seq) + 1, delFlag);
+			}
 			break;
 		}
 
 		if (found == 0)
 		{
+			printf("\"%s\" not found, add this new file\n", dent->d_name);
 
 			fprintf(fp_tmp, "%s\t%s\t%s\t001\t0\n", dent->d_name, username,
 					timestamp);
@@ -168,12 +168,10 @@ void update_local_log(const char *path)
 	printf("\n");
 
 	fp_tmp = fopen(filepath_02, "r");
-	fclose(fp_input);
-	fp_input = fopen(filepath_01, "r");
+	rewind(fp_input);
 
 	while ((fscanf(fp_input, "%s %s %s %s %s", filename, user, timeTmp, seq,
-			delFlag)) != EOF)
-	{
+			delFlag)) != EOF) {
 		strcpy(stringTmp, filename);
 		strcat(stringTmp, "\t");
 		strcat(stringTmp, user);
