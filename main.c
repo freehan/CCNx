@@ -77,18 +77,7 @@ void update_local_log(const char *path) {
 	printf("\tfilepath_03: %s\n", filepath_03);
 
 	// Create the local log file
-	while ((dent = readdir(srcdir)) != NULL) {
-		found = 0;
-		if (strcmp(dent->d_name, ".locallog") == 0) {
-			found = 1;
-			break;
-		}
-	}
-	if (found == 0) {
-		fp_input=fopen(filepath_01, "w");
-		printf("create locallog\n");
-		fclose(fp_input);
-	}
+
 	fp_input = fopen(filepath_01, "r");
 	fp_tmp = fopen(filepath_02, "w");
 	fp_output = fopen(filepath_03, "w");
