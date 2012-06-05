@@ -38,7 +38,6 @@ void show_modified_time(char* filepath, char* filename) {
 }
 
 void update_local_log(const char *path) {
-	printf("update local log begins \n");
 	int file_count = 0;
 	struct dirent* dent;
 	struct stat st;
@@ -93,10 +92,6 @@ void update_local_log(const char *path) {
 		printf("create locallog");
 	}
 	fp_input = fopen(filepath_01, "r");
-	if (fp_input==NULL)
-		printf("fp_input is NULL\n");
-	else
-		printf("fp_input is not NULL\n");
 	fp_tmp = fopen(filepath_02, "w");
 	fp_output = fopen(filepath_03, "w");
 
@@ -375,24 +370,6 @@ void check_repo_log(char *dir, char * slice) {
 
 	return;
 }
-/*
- if (local_new) {
- // Local Seq # > Repo Seq #
- put_file();
- } else if (repo_new) {
- // Repo Seq # > Local Seq #
- get_file();
- } else {
- // Repo Seq # = Local Seq #
- // Check user
- if (user is the same as me) {
- // Do nothing
- } else {
- // Conflict
-
- }
- }
- */
 
 void put_file(char * dir_name, char * file_name, char * slice_name) {
 	// put_log;
@@ -474,13 +451,9 @@ int main(int argc, char const *argv[]) {
 	fclose(fp);
 
 	// while (1) {
-	printf("start to sync\n"); //test
 	update_local_log(dir_name);
-	printf("successful after update local log\n");
 	download_repo_log(dir_name, slice_name);
-	printf("successful after download repo log\n");
 	check_repo_log(dir_name, slice_name);
-	printf("successful after check repo log\n");
 	// }
 
 	printf("success!!!!!!!!!!\n");
