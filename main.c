@@ -188,6 +188,13 @@ void update_local_log(const char *path) {
 	strcat(cmdTmp, filepath_01);
 	system(cmdTmp);
 
+	// Print the local log
+	printf("Print the local log\n");
+	strcpy(cmdTmp, "cat ");
+	strcat(cmdTmp, filepath_01);
+	system(cmdTmp);
+	printf("\n");
+
 	return;
 }
 
