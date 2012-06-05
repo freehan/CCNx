@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include <time.h>
 
-char timestamp[15];
+char timestamp[16];
 
 void show_modified_time(char* filepath, char* filename) {
 	struct stat b;
@@ -25,14 +25,14 @@ void show_modified_time(char* filepath, char* filename) {
 	strcat(path, filename);
 
 	if (!stat(path, &b)) {
-		strftime(timestamp, 14, "%Y%m%d%H%M%S", localtime( &b.st_mtime));
+		strftime(timestamp, 16, "%Y%m%d%H%M%S", localtime(&b.st_mtime));
 	} else {
 		printf("Cannot display the time.\n");
 
 		exit(1);
 	}
 
-	// printf("Check time: %s -> %s\n", path, timestamp);
+	printf("Check time: %s -> %s\n", path, timestamp);
 
 	return;
 }
@@ -48,7 +48,7 @@ void update_local_log(const char *path) {
 	char filename[20];
 	char filenameTmp[20];
 	char user[20];
-	char timeTmp[15];
+	char timeTmp[16];
 	char seq[4];
 	char filepath_01[100];
 	char filepath_02[100];
@@ -76,11 +76,19 @@ void update_local_log(const char *path) {
 	printf("\tfilepath_02: %s\n", filepath_02);
 	printf("\tfilepath_03: %s\n", filepath_03);
 
-	// Create the local log file
+	printf("Print the previous local log\n");
+	strcpy(cmdTmp, "cat ");
+	strcat(cmdTmp, filepath_01);
+	printf("%s\n", cmdTmp);
+	system(cmdTmp);
+	printf("\n");
 
+	// Create the local log file
 	fp_input = fopen(filepath_01, "r");
 	fp_tmp = fopen(filepath_02, "w");
 	fp_output = fopen(filepath_03, "w");
+
+
 
 	while ((dent = readdir(srcdir)) != NULL) {
 		found = 0;
@@ -102,7 +110,9 @@ void update_local_log(const char *path) {
 		// Check if it is a regular file
 		// if (S_ISREG(st.st_mode)) {
 		show_modified_time(path, dent->d_name);
-		rewind(fp_input);
+		// rewind(fp_input);
+		fclose(fp_input);
+		fp_input = fopen(filepath_01, "r");
 		while ((fscanf(fp_input, "%s %s %s %s %s", filename, user, timeTmp, seq,
 				delFlag)) != EOF) {
 			if (strcmp(filename, dent->d_name) != 0) {
@@ -112,6 +122,7 @@ void update_local_log(const char *path) {
 			found = 1;
 
 			// Compare the timestamp
+			printf("Compare the time stamp: %s and %s\n", timeTmp, timestamp);
 			if (strcmp(timeTmp, timestamp) == 0) {
 				fprintf(fp_tmp, "%s\t%s\t%s\t%s\t%s\n", filename, username,
 						timeTmp, seq, delFlag);
@@ -137,8 +148,19 @@ void update_local_log(const char *path) {
 
 	// Check if any file has been deleted
 	fclose(fp_tmp);
+
+	printf("Print local log tmp\n");
+	strcpy(cmdTmp, "cat ");
+	strcat(cmdTmp, filepath_02);
+	printf("%s\n", cmdTmp);
+	system(cmdTmp);
+	printf("\n");
+
 	fp_tmp = fopen(filepath_02, "r");
-	rewind(fp_input);
+	fclose(fp_input);
+	fp_input = fopen(filepath_01, "r");
+
+
 	while ((fscanf(fp_input, "%s %s %s %s %s", filename, user, timeTmp, seq,
 			delFlag)) != EOF) {
 		strcpy(stringTmp, filename);
@@ -161,6 +183,8 @@ void update_local_log(const char *path) {
 				break;
 			}
 		}
+
+		rewind(fp_tmp);
 
 		if (found == 0) {
 			// Delete a file
