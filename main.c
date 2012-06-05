@@ -27,7 +27,7 @@ void show_modified_time(char* filepath, char* filename) {
 	if (!stat(path, &b)) {
 		strftime(timestamp, 16, "%Y%m%d%H%M%S", localtime(&b.st_mtime));
 	} else {
-		printf("Cannot display the time.\n");
+		printf("Cannot display the time: %s\n", path);
 
 		exit(1);
 	}
@@ -474,12 +474,13 @@ int main(int argc, char const *argv[]) {
 	fclose(fp);
 
 	// while (1) {
-	update_local_log(dir_name);
-	download_repo_log(dir_name, slice_name);
-	check_repo_log(dir_name, slice_name);
+		update_local_log(dir_name);
+		download_repo_log(dir_name, slice_name);
+		check_repo_log(dir_name, slice_name);
+		printf("success!!!!!!!!!!\n");
+		// sleep(5000);
 	// }
 
-	printf("success!!!!!!!!!!\n");
 
 	return 0;
 }
