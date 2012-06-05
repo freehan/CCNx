@@ -273,6 +273,7 @@ void check_repo_log(char *dir, char * slice) {
 		else if (repo_is_delete == 1) {
 			printf("file %s is found \n", repo_file_name);
 			printf("delete %s/%s\n", dir, repo_file_name);
+			show_modified_time(dir, repo_file_name);
 			delete_file(dir, repo_file_name);
 			fprintf(fp_new_local, "%s\t%s\t%s\t%s\t%d\n", repo_file_name,
 					repo_user_name, timestamp, repo_seq_no, repo_is_delete);
@@ -297,6 +298,7 @@ void check_repo_log(char *dir, char * slice) {
 		}
 		else	//local seq# == repo seq#
 		{
+			show_modified_time(dir, repo_file_name);
 			fprintf(fp_new_local, "%s\t%s\t%s\t%s\t%d\n", local_file_name,
 					local_user_name, timestamp, local_seq_no, local_is_delete);
 			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n", repo_file_name,
