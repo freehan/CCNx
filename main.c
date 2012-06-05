@@ -459,7 +459,19 @@ void check_repo_log(char *dir, char * slice)
 	strcat(cmdTmp, " ");
 	strcat(cmdTmp, local_log);
 	system(cmdTmp);
+	//test
+	char cmdTT[200];
+	printf("repo loga after processing\n");
+	strcpy(cmdTT, "cat ");
+	strcat(cmdTT, repo_log);
+	system(cmdTT);
+	printf("\n\n");
 
+	printf("local log after processing\n");
+	strcpy(cmdTT, "cat ");
+	strcat(cmdTT, local_log);
+	system(cmdTT);
+	printf("\n\n");
 	//replace repository repolog with local repolog
 	put_file(dir, ".repolog", slice);
 
