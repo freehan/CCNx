@@ -3,4 +3,4 @@
 # $1: dirname
 # $2: filename
 # 
-c rm $1/$2
+rm $1/$2
