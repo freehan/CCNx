@@ -14,12 +14,12 @@
 #include <unistd.h>
 #include <time.h>
 
-void show_modified_time(char* filepath, char* filename);
-void update_local_log(const char *path);
-void download_repo_log(char * dir_name, char * slice_name);
-void put_file(char * dir_name, char * file_name, char * slice_name);
-void get_file(char * dir_name, char * file_name, char * slice_name);
-void delete_file(char *dir_name, char * file_name);
+// void show_modified_time(char* filepath, char* filename);
+// void update_local_log(const char *path);
+// void download_repo_log(char * dir_name, char * slice_name);
+// void put_file(char * dir_name, char * file_name, char * slice_name);
+// void get_file(char * dir_name, char * file_name, char * slice_name);
+// void delete_file(char *dir_name, char * file_name);
 
 char timestamp[16];
 
