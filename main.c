@@ -303,8 +303,8 @@ void check_repo_log(char *dir, char * slice) {
 		{
 
 			//show_modified_time(dir, repo_file_name);
-			fprintf(fp_new_local, local_time_stamp, local_file_name,
-					local_user_name, timestamp, local_seq_no, local_is_delete);
+			fprintf(fp_new_local, "%s\t%s\t%s\t%d\n", local_file_name,
+					local_user_name, local_time_stamp, local_seq_no, local_is_delete);
 			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n", repo_file_name,
 					repo_user_name, repo_seq_no, local_is_delete);
 		}
@@ -335,7 +335,7 @@ void check_repo_log(char *dir, char * slice) {
 					repo_user_name, repo_seq_no, repo_is_delete);
 		} else //local seq# == repo seq#
 		{
-			//show_modified_time(dir, repo_file_name);
+			show_modified_time(dir, repo_file_name);
 			fprintf(fp_new_local, "%s\t%s\t%s\t%s\t%d\n", local_file_name,
 					local_user_name, timestamp, local_seq_no, local_is_delete);
 			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n", repo_file_name,
@@ -490,7 +490,7 @@ int main(int argc, char const *argv[]) {
 
 	// while (1) {
 		update_local_log(dir_name);
-		download_repo_log(dir_name, slice_name);
+		//download_repo_log(dir_name, slice_name);
 		check_repo_log(dir_name, slice_name);
 		printf("success!!!!!!!!!!\n");
 		// sleep(5);
