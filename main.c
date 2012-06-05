@@ -285,6 +285,7 @@ void check_repo_log(char *dir, char * slice) {
 				&local_is_delete) != EOF) {
 			if (strcmp(local_file_name, repo_file_name) == 0) {
 				is_found = 1;
+				printf("is_found is 1!!!!!!!!\n");
 				break;
 			}
 		}
@@ -333,6 +334,7 @@ void check_repo_log(char *dir, char * slice) {
 					repo_user_name, timestamp, repo_seq_no, repo_is_delete);
 			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n", repo_file_name,
 					repo_user_name, repo_seq_no, repo_is_delete);
+
 		} else //local seq# == repo seq#
 		{
 			show_modified_time(dir, repo_file_name);
@@ -340,9 +342,10 @@ void check_repo_log(char *dir, char * slice) {
 					local_user_name, timestamp, local_seq_no, local_is_delete);
 			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n", repo_file_name,
 					repo_user_name, repo_seq_no, local_is_delete);
+
+
 		}
 	}
-
 	rewind(fp_local);
 	while (fscanf(fp_local, "%s %s %s %s %d", local_file_name, local_user_name,
 			local_time_stamp, local_seq_no, &local_is_delete) != EOF) {
@@ -383,6 +386,8 @@ void check_repo_log(char *dir, char * slice) {
 
 
 	//remove the temp repolog and mv to locallog
+
+
 	strcpy(cmdTmp, "rm ");
 	strcat(cmdTmp, repo_log);
 	system(cmdTmp);
@@ -490,7 +495,7 @@ int main(int argc, char const *argv[]) {
 
 	// while (1) {
 		update_local_log(dir_name);
-		//download_repo_log(dir_name, slice_name);
+		download_repo_log(dir_name, slice_name);
 		check_repo_log(dir_name, slice_name);
 		printf("success!!!!!!!!!!\n");
 		// sleep(5);
