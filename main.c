@@ -454,7 +454,7 @@ int main(int argc, char const *argv[]) {
 
 	fp = fopen(".binding", "r");
 	if (fp == NULL) {
-		printf("cannot find binding.txt\n");
+		printf("cannot find .binding\n");
 		exit(1);
 	}
 	while (fscanf(fp, "%s %s %s", dir_name, slice_name, group_key) != EOF) {
