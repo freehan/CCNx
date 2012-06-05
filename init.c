@@ -20,11 +20,15 @@
 
 char timestamp[15];
 
-void show_modified_time(char *filename) {
+void show_modified_time(char *filename)
+{
 	struct stat b;
-	if (!stat(filename, &b)) {
+	if (!stat(filename, &b))
+	{
 		strftime(timestamp, 100, "%Y%m%d%H%M%S", localtime(&b.st_mtime));
-	} else {
+	}
+	else
+	{
 		printf("Cannot display the time.\n");
 
 		exit(1);
@@ -33,7 +37,8 @@ void show_modified_time(char *filename) {
 	return;
 }
 
-void generate_log_file(const char *path) {
+void generate_log_file(const char *path)
+{
 	int file_count = 0;
 	struct dirent* dent;
 	struct stat st;
@@ -57,21 +62,25 @@ void generate_log_file(const char *path) {
 	strcat(filepath_02, "/.repolog");
 	fp_repo = fopen(filepath_02, "w");
 
-	while((dent = readdir(srcdir)) != NULL) { 
+	while ((dent = readdir(srcdir)) != NULL)
+	{
 		// Not the files we need
-		if(strcmp(dent->d_name, ".") == 0 || strcmp(dent->d_name, "..") == 0) {
+		if (strcmp(dent->d_name, ".") == 0 || strcmp(dent->d_name, "..") == 0)
+		{
 			continue;
 		}
 
 		lstat(dent->d_name, &st);
 
 		// Check if it is a regular file
-		if (S_ISREG(st.st_mode)) {
+		if (S_ISREG(st.st_mode))
+		{
 			show_modified_time(dent->d_name);
 			// Save the filename, timestamp and seq # into the local log file
-			fprintf(fp_local, "%s\t%s\t%s\t001\t0\n", dent->d_name, username, timestamp);  
+			fprintf(fp_local, "%s\t%s\t%s\t001\t0\n", dent->d_name, username,
+					timestamp);
 			// Save the filename and seq # into the repo log file
-			fprintf(fp_repo, "%s\t%s\t001\t0\n", dent->d_name, username);  
+			fprintf(fp_repo, "%s\t%s\t001\t0\n", dent->d_name, username);
 		}
 	}
 
@@ -81,17 +90,19 @@ void generate_log_file(const char *path) {
 	fclose(fp_local);
 	fclose(fp_repo);
 
-	return ;
+	return;
 }
 
 // Show the usage
-void usage() {
+void usage()
+{
 	printf("./init [-d directory] [-s Slice_Prefix] [-k Group_Key]\n");
 
 	exit(1);
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
 	int opt;
 	char shell[100];
 	char slice_name[20];
@@ -101,31 +112,33 @@ int main(int argc, char **argv) {
 
 	strcpy(shell, "sh create.sh ");
 
-	if(argc != 7)
+	if (argc != 7)
 		usage();
 
-	while((opt = getopt(argc, argv,"d:s:k:")) != -1) {
-		switch(opt) {
-			case 'd':
-				// Directory name
-				printf("directory = %s\n", optarg);
-				strcpy(dir_name, optarg);
-				break;
-			case 's':
-				// Slice name
-				printf("slice_name = %s\n", optarg);
-				strcpy(slice_name, optarg);
-				break;
-			case 'k':
-				// Group key
-				printf("group key = %s\n", optarg);
-				strcpy(key, optarg);
-				break;
-			default:
-				// Show the usage
-				usage();
-				return 0;
-				break;
+	while ((opt = getopt(argc, argv, "d:s:k:")) != -1)
+	{
+		switch (opt)
+		{
+		case 'd':
+			// Directory name
+			printf("directory = %s\n", optarg);
+			strcpy(dir_name, optarg);
+			break;
+		case 's':
+			// Slice name
+			printf("slice_name = %s\n", optarg);
+			strcpy(slice_name, optarg);
+			break;
+		case 'k':
+			// Group key
+			printf("group key = %s\n", optarg);
+			strcpy(key, optarg);
+			break;
+		default:
+			// Show the usage
+			usage();
+			return 0;
+			break;
 		}
 	}
 
