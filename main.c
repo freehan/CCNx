@@ -53,7 +53,7 @@ void update_local_log(const char *path) {
 	char filepath_01[100];
 	char filepath_02[100];
 	char filepath_03[100];
-	char cmdTmp[500];
+	char cmdTmp[200];
 	int found = 0;
 	char* username;
 	char delFlag[2];
@@ -77,19 +77,16 @@ void update_local_log(const char *path) {
 	printf("\tfilepath_03: %s\n", filepath_03);
 
 	// Create the local log file
-	while ((dent = readdir(srcdir)) != NULL)
-	{
-		found=0;
-		if (strcmp(dent->d_name, ".locallog") == 0)
-		{
-			found=1;
+	while ((dent = readdir(srcdir)) != NULL) {
+		found = 0;
+		if (strcmp(dent->d_name, ".locallog") == 0) {
+			found = 1;
 			break;
 		}
 	}
-	if (found==0)
-	{
+	if (found == 0) {
 		fopen(filepath_01, "w");
-		printf("create locallog");
+		printf("create locallog\n");
 	}
 	fp_input = fopen(filepath_01, "r");
 	fp_tmp = fopen(filepath_02, "w");
@@ -182,12 +179,10 @@ void update_local_log(const char *path) {
 			fprintf(fp_output, "%s\n", stringTmp);
 		}
 	}
-
 	// Close the log file
 	fclose(fp_input);
+	fclose(fp_tmp);
 	fclose(fp_output);
-
-
 
 	strcpy(cmdTmp, "rm ");
 	strcat(cmdTmp, filepath_01);
@@ -202,7 +197,15 @@ void update_local_log(const char *path) {
 	strcat(cmdTmp, " ");
 	strcat(cmdTmp, filepath_01);
 	system(cmdTmp);
-
+	//test
+	fp_output = fopen(filepath_01, "r");
+	while ((fscanf(fp_output, "%s %s %s %s %s", filenameTmp, user, timeTmp, seq,
+			delFlag)) != EOF) {
+		printf("local log before comparing:  %s\t%s\t%s\t%s\t%s\n", filenameTmp,
+				user, timeTmp, seq, delFlag);
+	}
+	fclose(fp_output);
+	//
 	return;
 }
 
@@ -253,7 +256,7 @@ void check_repo_log(char *dir, char * slice) {
 
 	while (fscanf(fp_repo, "%s %s %s %d", repo_file_name, repo_user_name,
 			repo_seq_no, &repo_is_delete) != EOF) {
-		printf("repolog:  %s\t%s\t%s\t%d\n", repo_file_name, repo_user_name,
+		printf("repo log:  %s\t%s\t%s\t%d\n", repo_file_name, repo_user_name,
 				repo_seq_no, repo_is_delete);
 		//is_found=0 if a file in repo cannot be found in local
 		//        =1 otherwise
@@ -276,7 +279,7 @@ void check_repo_log(char *dir, char * slice) {
 			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n", repo_file_name,
 					repo_user_name, repo_seq_no, repo_is_delete);
 		}
-		//if repo_is_delete==1, it means that the file named repo_file_name is deleted at the other side
+		//if repo_is_delete==1, it means that the file named repo_file_name is deleted on other file systems
 		//, thus it should be deleted in the local file system
 		else if (repo_is_delete == 1) {
 			printf("file %s is found \n", repo_file_name);
@@ -303,10 +306,13 @@ void check_repo_log(char *dir, char * slice) {
 			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n", repo_file_name,
 					repo_user_name, repo_seq_no, repo_is_delete);
 		}
-//		else  // local_seq_no == repo_seq_no ---> conflict resolving
-//		{
-//
-//		}
+		else
+		{
+			fprintf(fp_new_local, "%s\t%s\t%s\t%s\t%d\n", local_file_name,
+					local_user_name, timestamp, local_seq_no, local_is_delete);
+			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n", local_file_name,
+					local_user_name, local_seq_no, local_is_delete);
+		}
 	}
 
 	rewind(fp_local);
@@ -343,7 +349,7 @@ void check_repo_log(char *dir, char * slice) {
 	fclose(fp_new_repo);
 	fclose(fp_new_local);
 
-	char cmdTmp[100];
+	char cmdTmp[200];
 	//remove the temp repolog and mv to locallog
 	strcpy(cmdTmp, "rm ");
 	strcat(cmdTmp, repo_log);
