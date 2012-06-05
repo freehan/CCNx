@@ -312,7 +312,7 @@ void check_repo_log(char *dir, char * slice) {
 		//, thus it should be deleted in the local file system
 		else if (local_is_delete == 1)
 		{
-
+			printf("local is delete is 1!!!!!!!!!!!!!\n");
 			//show_modified_time(dir, repo_file_name);
 			fprintf(fp_new_local, "%s\t%s\t%s\t%s\t%d\n", local_file_name,
 					local_user_name, local_time_stamp, local_seq_no, local_is_delete);
@@ -417,6 +417,10 @@ void check_repo_log(char *dir, char * slice) {
 	strcat(cmdTmp, local_log);
 	system(cmdTmp);
 
+	printf("!!!!!!!!!!\n");
+	strcpy(cmdTmp, "cat ");
+	strcat(cmdTmp, repo_log);
+	system(cmdTmp);
 	//synchronize local repolog to repository repolog
 	put_file(dir, ".repolog", slice);
 
