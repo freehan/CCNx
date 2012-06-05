@@ -29,7 +29,7 @@ void show_modified_time(char* filepath, char* filename) {
 	} else {
 		printf("Cannot display the time: %s\n", path);
 
-		exit(1);
+		// exit(1);
 	}
 
 	printf("Check time: %s -> %s\n", path, timestamp);
@@ -478,7 +478,7 @@ int main(int argc, char const *argv[]) {
 		download_repo_log(dir_name, slice_name);
 		check_repo_log(dir_name, slice_name);
 		printf("success!!!!!!!!!!\n");
-		// sleep(5000);
+		// sleep(5);
 	// }
 
 
