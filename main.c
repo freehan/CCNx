@@ -223,6 +223,16 @@ void update_local_log(const char *path) {
 
 void download_repo_log(char * dir_name, char * slice_name) {
 	get_file(dir_name, ".repolog", slice_name);
+
+	char cmdTmp[100];
+
+	printf("repolog from Repository");
+	strcpy(cmdTmp, "cat ");
+	strcat(cmdTmp, dir_name);
+	strcat(cmdTmp, "/");
+	strcat(cmdTmp, ".repolog");
+	system(cmdTmp);
+
 }
 
 //@param dir: the path of the folder to be synchronized
@@ -298,16 +308,15 @@ void check_repo_log(char *dir, char * slice) {
 			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n", repo_file_name,
 					repo_user_name, repo_seq_no, repo_is_delete);
 		}
-		//if repo_is_delete==1, it means that the file named repo_file_name is deleted on other file systems
+		//if local==1, it means that the file named repo_file_name is deleted on other file systems
 		//, thus it should be deleted in the local file system
 		else if (local_is_delete == 1)
 		{
 
 			//show_modified_time(dir, repo_file_name);
-			fprintf(fp_new_local, "%s\t%s\t%s\t%d\n", local_file_name,
+			fprintf(fp_new_local, "%s\t%s\t%s\t%s\t%d\n", local_file_name,
 					local_user_name, local_time_stamp, local_seq_no, local_is_delete);
-			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n", repo_file_name,
-					repo_user_name, repo_seq_no, local_is_delete);
+			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n", repo_file_name, repo_user_name, repo_seq_no, local_is_delete);
 		}
 		else if (repo_is_delete == 1) {
 			printf("file %s is found \n", repo_file_name);
