@@ -29,6 +29,10 @@ Log Filename Format
 ------------------------------------------------------------
 Handling local log and repo log
 
+if (delete flag ==1)
+{	
+	delete file
+}	
 if (local_new) 
 {
  // Local Seq # > Repo Seq #
