@@ -25,7 +25,7 @@ void show_modified_time(char* filepath, char* filename) {
 	strcat(path, filename);
 
 	if (!stat(path, &b)) {
-		strftime(timestamp, 100, "%Y%m%s%H%M%S", localtime(&b.st_mtime));
+		strftime(timestamp, 14, "%Y%m%d%H%M%S", localtime( &b.st_mtime));
 	} else {
 		printf("Cannot display the time.\n");
 
