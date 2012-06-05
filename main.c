@@ -85,8 +85,9 @@ void update_local_log(const char *path) {
 		}
 	}
 	if (found == 0) {
-		fopen(filepath_01, "w");
+		fp_input=fopen(filepath_01, "w");
 		printf("create locallog\n");
+		fclose(fp_input);
 	}
 	fp_input = fopen(filepath_01, "r");
 	fp_tmp = fopen(filepath_02, "w");
@@ -302,8 +303,8 @@ void check_repo_log(char *dir, char * slice) {
 		{
 			fprintf(fp_new_local, "%s\t%s\t%s\t%s\t%d\n", local_file_name,
 					local_user_name, timestamp, local_seq_no, local_is_delete);
-			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n", local_file_name,
-					local_user_name, local_seq_no, local_is_delete);
+			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n", repo_file_name,
+					repo_user_name, repo_seq_no, local_is_delete);
 		}
 	}
 
