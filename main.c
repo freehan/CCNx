@@ -197,15 +197,7 @@ void update_local_log(const char *path) {
 	strcat(cmdTmp, " ");
 	strcat(cmdTmp, filepath_01);
 	system(cmdTmp);
-	//test
-	fp_output = fopen(filepath_01, "r");
-	while ((fscanf(fp_output, "%s %s %s %s %s", filenameTmp, user, timeTmp, seq,
-			delFlag)) != EOF) {
-		printf("local log before comparing:  %s\t%s\t%s\t%s\t%s\n", filenameTmp,
-				user, timeTmp, seq, delFlag);
-	}
-	fclose(fp_output);
-	//
+
 	return;
 }
 
