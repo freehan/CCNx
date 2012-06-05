@@ -88,8 +88,6 @@ void update_local_log(const char *path) {
 	fp_tmp = fopen(filepath_02, "w");
 	fp_output = fopen(filepath_03, "w");
 
-
-
 	while ((dent = readdir(srcdir)) != NULL) {
 		found = 0;
 
@@ -161,7 +159,6 @@ void update_local_log(const char *path) {
 	fp_tmp = fopen(filepath_02, "r");
 	fclose(fp_input);
 	fp_input = fopen(filepath_01, "r");
-
 
 	while ((fscanf(fp_input, "%s %s %s %s %s", filename, user, timeTmp, seq,
 			delFlag)) != EOF) {
@@ -282,6 +279,7 @@ void check_repo_log(char *dir, char * slice) {
 				&local_is_delete) != EOF) {
 			if (strcmp(local_file_name, repo_file_name) == 0) {
 				is_found = 1;
+				printf("is_found is 1!!!!!!!!\n");
 				break;
 			}
 		}
@@ -321,17 +319,18 @@ void check_repo_log(char *dir, char * slice) {
 					repo_user_name, timestamp, repo_seq_no, repo_is_delete);
 			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n", repo_file_name,
 					repo_user_name, repo_seq_no, repo_is_delete);
-		}
-		else	//local seq# == repo seq#
+
+		} else //local seq# == repo seq#
 		{
-			show_modified_time(dir, repo_file_name);
+			//show_modified_time(dir, repo_file_name);
 			fprintf(fp_new_local, "%s\t%s\t%s\t%s\t%d\n", local_file_name,
 					local_user_name, timestamp, local_seq_no, local_is_delete);
 			fprintf(fp_new_repo, "%s\t%s\t%s\t%d\n", repo_file_name,
 					repo_user_name, repo_seq_no, local_is_delete);
+
+
 		}
 	}
-
 	rewind(fp_local);
 	while (fscanf(fp_local, "%s %s %s %s %d", local_file_name, local_user_name,
 			local_time_stamp, local_seq_no, &local_is_delete) != EOF) {
@@ -368,6 +367,8 @@ void check_repo_log(char *dir, char * slice) {
 
 	char cmdTmp[200];
 	//remove the temp repolog and mv to locallog
+
+
 	strcpy(cmdTmp, "rm ");
 	strcat(cmdTmp, repo_log);
 	system(cmdTmp);
